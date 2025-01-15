@@ -385,6 +385,8 @@ const ProductPopup: React.FC<IProductProps> = ({
               </div>
             </div>
 
+            
+
             {/* Right Section - Cart Actions */}
             <div className="w-full lg:w-[35%] p-0 lg:p-4 relative lg:fixed lg:right-[calc((100%-1200px)/2+8px)] lg:top-0 mt-0 lg:bottom-[20px] lg:overflow-y-auto">
               <div className="flex flex-col gap-2 bg-white dark:bg-[#202020] md:rounded-xl md:shadow-md p-2 dark:text-white">
@@ -448,7 +450,7 @@ const ProductPopup: React.FC<IProductProps> = ({
               <button
                 onClick={handleAddToCart}
                 disabled={isAddingToCart}
-                className="fixed bottom-0 left-0 right-0 md:static mt-1 md:mt-2 mb-2 w-full bg-[#FFC714] dark:text-[#000] text-[var(--text-primary)] font-extrabold py-4 md:py-3 px-6 rounded-t-2xl md:rounded-xl transition-colors shadow-lg"
+                className="hidden lg:fixed bottom-0 left-0 right-0 md:static mt-1 md:mt-2 mb-2 w-full bg-[#FFC714] dark:text-[#000] text-[var(--text-primary)] font-extrabold py-4 md:py-3 px-6 rounded-t-2xl md:rounded-xl transition-colors shadow-lg z-50"
                 >
                 {isAddingToCart ? (
                   <div className="flex items-center justify-center gap-2">
@@ -459,6 +461,22 @@ const ProductPopup: React.FC<IProductProps> = ({
                 )}
               </button>
             </div>
+          </div>
+
+          <div className="sticky lg:hidden bottom-0 left-0 right-0 z-[60] p-4 bg-white dark:bg-[#202020] shadow-lg">
+            <button
+              onClick={handleAddToCart}
+              disabled={isAddingToCart}
+              className="w-full bg-[#FFC714] dark:text-[#000] text-[var(--text-primary)] font-extrabold py-4 md:py-3 px-6 rounded-full transition-colors"
+            >
+              {isAddingToCart ? (
+                <div className="flex items-center justify-center gap-2">
+                  <div className="w-5 h-5 border-2 border-black border-t-transparent rounded-full animate-spin" />
+                </div>
+              ) : (
+                "ADD TO ORDER"
+              )}
+            </button>
           </div>
 
           {/* Close Button */}
