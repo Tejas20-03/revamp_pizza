@@ -21,7 +21,7 @@ const MemoizedTabs = React.memo(Tabs);
 
 const SkeletonLoader = React.memo(() => (
   <div className="w-full pb-[10px] mt-4 bg-background px-0 md:px-40">
-    <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 max-w-[1400px] mx-auto p-4">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2 max-w-[1400px] mx-auto p-4">
       {[...Array(8)].map((_, index) => (
         <div key={index} className="flex flex-col p-2 rounded-xl shadow-md bg-white">
           <div className="w-full h-[180px] bg-gray-200 animate-pulse rounded-xl mb-2" />

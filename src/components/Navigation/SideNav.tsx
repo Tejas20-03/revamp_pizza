@@ -272,7 +272,7 @@ const SideNav = () => {
 
   return (
     <>
-      <nav className="fixed left-0 top-0 h-screen w-[62px] hidden lg:flex flex-col m-auto bg-white dark:bg-[#202020] shadow-sm border-r border-[#9f9f9f1a] z-40">
+      <nav className="fixed left-0 top-0 h-screen w-[62px] hidden lg:hidden flex-col m-auto bg-white dark:bg-[#202020] shadow-sm border-r border-[#9f9f9f1a] z-40">
         <div className="flex flex-col justify-between h-full py-2">
           <div className="flex flex-col space-y-6">
             {navItems.map((item) => (

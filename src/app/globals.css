@@ -124,7 +124,7 @@ body {
 }
 
 .main-content {
-  @apply lg:ml-[70px];
+  /* @apply lg:ml-[70px]; */
   /* Adds margin to main content on large screens */
 }
 
