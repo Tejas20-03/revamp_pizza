@@ -102,10 +102,10 @@ const Cards: React.FC<Iprops> = ({ data, heading, isLoading }) => {
             {data?.map((item, index) => (
               <div
                 key={index}
-                className="flex flex-row md:flex-col p-1 rounded-[10px] pt-[5px] justify-between bg-white dark:bg-[#202020]  md:shadow-[5px_0px_20px_rgba(0,0,0,0.1)] relative h-fit border-b"
+                className="flex flex-row md:flex-col p-1 rounded-[10px] pt-[5px] justify-between bg-white dark:bg-[#202020] relative h-fit border-b"
               >
                 <div
-                  className="relative w-1/3 md:w-full rounded-[15px] p-1 transition-[filter,transform] cursor-pointer duration-200 linear md:shadow-[5px_0px_20px_rgba(0,0,0,0.1)]"
+                  className="relative w-1/3 md:w-full rounded-[15px] p-1 transition-[filter,transform] cursor-pointer duration-200 linear"
                   onClick={() => handleAddToCart(item)}
                 >
                   {item.IsNewItem && (

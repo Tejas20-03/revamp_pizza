@@ -104,7 +104,7 @@ const Tabs: React.FC<TabsProps> = ({ tabs, isLoading }) => {
 
   return (
     <div
-      className="sticky top-[60px] md:top-[70px] p-0 z-20 w-full"
+      className="sticky top-[0px] p-0 z-20 w-full"
       style={backgroundStyle}
     >
       <div className="max-w-[1700px] mx-auto px-4 md:pl-12 overflow-x-auto no-scrollbar">

@@ -69,7 +69,7 @@ const Header = () => {
   return (
     <>
       <header
-        className="w-full sticky top-0 z-20 h-[60px] sm:h-[70px] lg:h-[70px] mb-1 dark:bg-[#202020]"
+        className="w-full relative top-0 z-20 h-[60px] sm:h-[70px] lg:h-[70px] mb-1 dark:bg-[#202020]"
         style={backgroundStyle}
       >
         <nav className="w-full h-full px-3 max-w-8xl mx-auto">
