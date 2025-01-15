@@ -1,0 +1,199 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+input,
+textarea,
+[contenteditable="true"] {
+  -webkit-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+}
+
+:root {
+  /* Existing variables */
+  --background: #ffffff;
+  --foreground: #171717;
+  --font-manrope: var(--font-manrope);
+
+  /* New color variables */
+  --primary: #ffc700;
+  --primary-hover: #ffd700;
+  --primary-light: #ffc71442;
+  --text-primary: #212121;
+  --text-secondary: #000000;
+  --border-color: #gray-200;
+  --overlay-bg: rgba(0, 0, 0, 0.3);
+  --yellow-border: #ffc700;
+  --yellow-bg: #ffc714;
+}
+
+:root.dark {
+  --background: #121212;
+  --text-primary: #ffffff;
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: var(--font-manrope);
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none; /* Chrome, Safari and Opera */
+}
+
+@keyframes progress {
+  0% {
+    width: 0%;
+    background-color: #fbbf24;
+  }
+  25% {
+    width: 100%;
+    background-color: #22c55e;
+  }
+  50% {
+    width: 100%;
+    background-color: #ef4444;
+  }
+  75% {
+    width: 100%;
+    background-color: #3b82f6;
+  }
+  100% {
+    width: 0%;
+    background-color: #fbbf24;
+  }
+}
+
+.animate-progress-loading {
+  animation: progress 3s ease-in-out infinite;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(100%);
+  }
+}
+
+.slide-up {
+  animation: slideUp 0.3s ease-out forwards;
+}
+
+.slide-down {
+  animation: slideDown 0.3s ease-out forwards;
+}
+
+@keyframes loading {
+  0% {
+    width: 0%;
+  }
+  50% {
+    width: 100%;
+  }
+  100% {
+    width: 0%;
+  }
+}
+
+.animate-loading-bar {
+  animation: loading 1.5s ease-in-out infinite;
+}
+
+.main-content {
+  @apply lg:ml-[70px];
+  /* Adds margin to main content on large screens */
+}
+
+/* Update the existing swiper button styles */
+.swiper-button-prev,
+.swiper-button-next {
+  @apply hidden md:flex items-center justify-center;
+}
+
+.swiper-button-prev:after,
+.swiper-button-next:after {
+  @apply text-sm text-white;
+}
+
+.swiper-button-disabled {
+  @apply opacity-50 cursor-not-allowed;
+}
+
+.location-swiper .swiper-button-next,
+.location-swiper .swiper-button-prev {
+  @apply bg-[#1F9226] w-10 h-10 rounded-full flex items-center justify-center;
+}
+
+.location-swiper .swiper-button-next:after,
+.location-swiper .swiper-button-prev:after {
+  @apply text-white text-sm;
+}
+
+.location-swiper .swiper-button-disabled {
+  @apply opacity-50 cursor-not-allowed;
+}
+
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+@keyframes bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+.bounce {
+  animation: bounce 2.5s infinite;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.2s ease-out;
+}
