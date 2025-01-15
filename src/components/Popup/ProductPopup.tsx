@@ -5,8 +5,9 @@ import { openToaster } from "@/redux/toaster/slice";
 import { MenuItemData } from "@/services/Home/types";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
+import { FaChevronDown } from "react-icons/fa";
 import { FiUser } from "react-icons/fi";
-import { IoClose } from "react-icons/io5";
+import { IoArrowDown, IoClose } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
 
 interface IProductProps {
@@ -193,7 +194,7 @@ const ProductPopup: React.FC<IProductProps> = ({
           }`}
         >
           <div className="sticky top-0 left-0 right-0 z-[51] lg:hidden">
-            <div className="absolute right-0 flex justify-end p-4">
+            <div className="absolute left-0 flex justify-end p-4">
               <button
                 onClick={() => {
                   resetSelections();
@@ -201,7 +202,7 @@ const ProductPopup: React.FC<IProductProps> = ({
                 }}
                 className="p-2 bg-[var(--primary-light)] rounded-full transition-colors w-12 h-12"
               >
-                <IoClose size={32} />
+                <FaChevronDown  size={32} />
               </button>
             </div>
           </div>
@@ -447,8 +448,8 @@ const ProductPopup: React.FC<IProductProps> = ({
               <button
                 onClick={handleAddToCart}
                 disabled={isAddingToCart}
-                className="mt-1 md:mt-2 mb-2 w-full  bg-[#FFC714] dark:text-[#000] text-[var(--text-primary)] font-extrabold py-3 px-6 rounded-md transition-colors"
-              >
+                className="fixed bottom-0 left-0 right-0 md:static mt-1 md:mt-2 mb-2 w-full bg-[#FFC714] dark:text-[#000] text-[var(--text-primary)] font-extrabold py-4 md:py-3 px-6 rounded-t-2xl md:rounded-xl transition-colors shadow-lg"
+                >
                 {isAddingToCart ? (
                   <div className="flex items-center justify-center gap-2">
                     <div className="w-5 h-5 border-2 border-black border-t-transparent rounded-full animate-spin" />

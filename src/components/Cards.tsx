@@ -40,49 +40,56 @@ const Cards: React.FC<Iprops> = ({ data, heading, isLoading }) => {
     }
     dispatch(setLoading(true));
 
+    // if (product) {
+    //   getOptions(product.ID, {}).then((res) => {
+    //     if (
+    //       res?.Data.MenuSizesList[0].FlavourAndToppingsList &&
+    //       res?.Data.MenuSizesList[0].FlavourAndToppingsList.length <= 0
+    //     ) {
+    //       const cartItem = {
+    //         options: [],
+    //         Price: res?.Data.MenuSizesList[0].DiscountedPrice,
+    //         Quantity: 1,
+    //         ProductName: res?.Data.Name,
+    //         ItemID: res.Data.MenuSizesList[0].MenuItemID,
+    //         CategoryName: res.Data.CategoryName,
+    //         MinimumDelivery: res.Data.MenuSizesList[0].MinDeliveryPrice,
+    //         SizeID: res.Data.MenuSizesList[0].ID,
+    //         TotalProductPrice: res.Data.MenuSizesList[0].DiscountedPrice,
+    //         discountGiven:
+    //           res?.Data.MenuSizesList[0].ActualPrice -
+    //           res?.Data.MenuSizesList[0].DiscountedPrice,
+    //         ID: res.Data.ID,
+    //         ItemImage: res.Data.ItemImage,
+    //         PaymentType: res.Data.PaymentType,
+    //       };
+
+    //       dispatch(addToCart({ products: cartItem }));
+
+    //       // Store in localStorage
+    //       const existingCart = JSON.parse(localStorage.getItem("cart") || "[]");
+    //       existingCart.push(cartItem);
+    //       localStorage.setItem("cart", JSON.stringify(existingCart));
+    //       dispatch(
+    //         openToaster({
+    //           showSuccess: true,
+    //           message: "Added to cart",
+    //           title: "Success",
+    //         })
+    //       );
+    //       dispatch(setLoading(false));
+    //     } else {
+    //       setProductData(res?.Data || null);
+    //       setOpen(true);
+    //       dispatch(setLoading(false));
+    //     }
+    //   });
+    // }
     if (product) {
       getOptions(product.ID, {}).then((res) => {
-        if (
-          res?.Data.MenuSizesList[0].FlavourAndToppingsList &&
-          res?.Data.MenuSizesList[0].FlavourAndToppingsList.length <= 0
-        ) {
-          const cartItem = {
-            options: [],
-            Price: res?.Data.MenuSizesList[0].DiscountedPrice,
-            Quantity: 1,
-            ProductName: res?.Data.Name,
-            ItemID: res.Data.MenuSizesList[0].MenuItemID,
-            CategoryName: res.Data.CategoryName,
-            MinimumDelivery: res.Data.MenuSizesList[0].MinDeliveryPrice,
-            SizeID: res.Data.MenuSizesList[0].ID,
-            TotalProductPrice: res.Data.MenuSizesList[0].DiscountedPrice,
-            discountGiven:
-              res?.Data.MenuSizesList[0].ActualPrice -
-              res?.Data.MenuSizesList[0].DiscountedPrice,
-            ID: res.Data.ID,
-            ItemImage: res.Data.ItemImage,
-            PaymentType: res.Data.PaymentType,
-          };
-
-          dispatch(addToCart({ products: cartItem }));
-
-          // Store in localStorage
-          const existingCart = JSON.parse(localStorage.getItem("cart") || "[]");
-          existingCart.push(cartItem);
-          localStorage.setItem("cart", JSON.stringify(existingCart));
-          dispatch(
-            openToaster({
-              showSuccess: true,
-              message: "Added to cart",
-              title: "Success",
-            })
-          );
-          dispatch(setLoading(false));
-        } else {
-          setProductData(res?.Data || null);
-          setOpen(true);
-          dispatch(setLoading(false));
-        }
+        setProductData(res?.Data || null);
+        setOpen(true);
+        dispatch(setLoading(false));
       });
     }
   };
@@ -92,7 +99,7 @@ const Cards: React.FC<Iprops> = ({ data, heading, isLoading }) => {
       <div className="xs:pl-[5px] pb-[10px] lg:pr-0 xs:pr-[5px]">
         <h2
           id={heading}
-          className="text-[26px] text-manrope md:text-[32px] text-[#2A2a2a] dark:text-white font-bold mb-1 mt-2 mx-2 border-t-2 dark:border-[#202020] pt-2"
+          className="text-[26px] text-manrope md:text-[32px] text-[#2A2a2a] dark:text-white font-bold my-4 mx-2 border-t-2 dark:border-[#202020] pt-2"
         >
           {heading}
         </h2>
@@ -103,10 +110,11 @@ const Cards: React.FC<Iprops> = ({ data, heading, isLoading }) => {
               <div
                 key={index}
                 className="flex flex-row md:flex-col p-1 rounded-[10px] pt-[5px] justify-between bg-white dark:bg-[#202020] relative h-fit border-b"
+                onClick={() => handleAddToCart(item)}
               >
                 <div
                   className="relative w-1/3 md:w-full rounded-[15px] p-1 transition-[filter,transform] cursor-pointer duration-200 linear"
-                  onClick={() => handleAddToCart(item)}
+
                 >
                   {item.IsNewItem && (
                     <span className="absolute top-2 right-2 z-10 bg-[#1F9226] text-white text-[12px] font-light px-1 py-0 rounded">
@@ -122,12 +130,12 @@ const Cards: React.FC<Iprops> = ({ data, heading, isLoading }) => {
                     quality={100} // Add this line
                   />
                 </div>
-                <div className="flex flex-col flex-1 px-1 mb-2">
-                  <div className="flex justify-between items-start gap-1">
+                <div className="flex flex-col flex-1 px-1 mb-2 justify-center">
+                  <div className="flex justify-between items-center gap-1">
                     <h3 className="text-[16px] font-bold py-1 flex-1 leading-tight dark:text-white">
                       {item.Name}
                     </h3>
-                    <div className="h-8 w-8 rounded-full bg-[#FFC714] hidden md:flex items-center cursor-pointer justify-center shadow-[0px_10px_15px_rgba(236,99,0,0.44)]">
+                    <div className="h-8 w-8 rounded-full bg-[#FFC714] hidden items-center cursor-pointer justify-center shadow-[0px_10px_15px_rgba(236,99,0,0.44)]">
                       <AiOutlinePlus
                         className="h-6 w-6  text-[var(--text-primary)]"
                         onClick={() => {

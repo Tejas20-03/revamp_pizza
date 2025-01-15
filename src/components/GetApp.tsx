@@ -31,7 +31,7 @@ const GetApp: React.FC<GetAppProps> = ({
       <div className="w-full py-5 bottom-0 left-0 bg-white dark:bg-[#121212] z-40">
         <div className="max-w-[1240px] mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="relative w-full pl-24 box-border">
+            <div className="hidden w-full pl-24 box-border">
               <Image
                 alt="mobile app"
                 src="/mobile.png"
@@ -88,7 +88,7 @@ const GetApp: React.FC<GetAppProps> = ({
 
   if (!showFullContent) {
     return (
-      <div className="max-w-[1700px] mx-auto px-2">
+      <div className="max-w-[1700px] mx-auto px-2 hidden">
         <div className="flex justify-between items-center p-[18px] mt-[10px] w-full rounded bg-[var(--primary-light)]">
           <h2 className="text-[20px] font-bold dark:text-white">Get the App!</h2>
           <div className="mr-2">
