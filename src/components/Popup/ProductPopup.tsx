@@ -2,13 +2,14 @@ import { addToCart } from "@/redux/cart/action";
 import { ProductType } from "@/redux/cart/slice";
 import { StoreDispatch, StoreState } from "@/redux/reduxStore";
 import { openToaster } from "@/redux/toaster/slice";
-import { MenuItemData } from "@/services/Home/types";
+import { MenuItemData, MenuItemOption } from "@/services/Home/types";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { FaChevronDown } from "react-icons/fa";
 import { FiUser } from "react-icons/fi";
 import { IoArrowDown, IoClose } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
+import OptionsPopup from "./OptionsPopup";
 
 interface IProductProps {
   isOpen: boolean;
@@ -33,9 +34,12 @@ const ProductPopup: React.FC<IProductProps> = ({
   );
   const phoneNumber = useSelector((state: StoreState) => state.address.phone);
   const [specialInstructions, setSpecialInstructions] = useState("");
-  const [selectedOptions, setSelectedOptions] = useState<any[]>([]);
+  const [selectedOptions, setSelectedOptions] = useState<
+    Record<string, MenuItemOption[]>
+  >({});
   const [selectedSize, setSelectedSize] = useState<string>("");
   const [imageScale, setImageScale] = useState<number>(1);
+  const [expandedOption, setExpandedOption] = useState<string | null>(null);
 
   const [isAddingToCart, setIsAddingToCart] = useState<boolean>(false);
 
@@ -69,7 +73,7 @@ const ProductPopup: React.FC<IProductProps> = ({
 
   const handleSizeSelect = (newSize: string) => {
     setSelectedSize(newSize);
-    setSelectedOptions([]);
+    setSelectedOptions({});
     const sizeIndex =
       product?.MenuSizesList.findIndex((size) => size.Size === newSize) || 0;
     const scaleValue = 1 + sizeIndex * 0.1;
@@ -183,7 +187,7 @@ const ProductPopup: React.FC<IProductProps> = ({
   };
 
   const resetSelections = () => {
-    setSelectedOptions([]);
+    setSelectedOptions({});
     setSelectedSize("");
     setSpecialInstructions("");
   };
@@ -204,9 +208,9 @@ const ProductPopup: React.FC<IProductProps> = ({
 
   return (
     <>
-      <div className="fixed inset-0 z-50 flex items-start sm:items-center justify-center bg-black/50 backdrop-blur-sm transition-opacity duration-200 p-2 sm:p-4">
+      <div className="fixed inset-0 z-50 flex items-start sm:items-center justify-center bg-black/50 backdrop-blur-sm transition-opacity duration-200 p-2 sm:p-4 overflow-y-auto">
         <div
-          className={`w-full sm:max-w-[900px] min-h-screen sm:min-h-0 sm:h-[85vh] z-60 sm:rounded-3xl  bg-white dark:bg-[#121212] overflow-hidden ${
+          className={`w-full sm:max-w-[900px] min-h-screen sm:min-h-0 sm:h-[85vh] z-60 sm:rounded-3xl  bg-white dark:bg-[#121212]  ${
             isOpen ? "slide-up" : "slide-down"
           }`}
         >
@@ -226,7 +230,7 @@ const ProductPopup: React.FC<IProductProps> = ({
           <div className="h-full flex flex-col md:flex-row relative">
             <div className="w-full md:w-7/12 p-2 md:p-4">
               {/* Product Header */}
-              <div className="w-full h-full relative rounded-xl overflow-hidden shadow-sm p-4  flex items-center justify-center">
+              <div className="w-full h-full relative rounded-xl shadow-sm p-4  flex items-center justify-center">
                 {isNewItem && (
                   <span className="absolute top-6 right-6 z-10 bg-[#1F9226] text-white text-[12px] font-light px-2 py-0.5 rounded animate-bounce">
                     New!
@@ -248,8 +252,8 @@ const ProductPopup: React.FC<IProductProps> = ({
               </div>
             </div>
 
-            <div className="w-full md:w-5/12 p-2 md:p-4 overflow-y-auto">
-              <div className="bg-white dark:bg-[#202020] p-4 rounded-lg shadow-sm mb-4">
+            <div className="w-full md:w-5/12 p-2 md:p-4 overflow-y-auto bg-gray-100 dark:bg-[#202020] mb-20">
+              <div className=" p-4 rounded-lg shadow-sm mb-4">
                 <h2 className="text-[22px] font-extrabold leading-tight mb-1 dark:text-white">
                   {product.Name}
                 </h2>
@@ -324,65 +328,64 @@ const ProductPopup: React.FC<IProductProps> = ({
                       category.FlavourAndToppingsList?.map((topping, idx) => (
                         <div
                           key={idx}
-                          className="mb-1 bg-white dark:bg-[#202020] px-2 shadow-sm rounded-[10px]"
+                          className="mb-1 px-2 shadow-sm rounded-[10px]"
                         >
-                          <h3 className="text-[20px] font-semibold flex items-center gap-2 p-2 dark:text-white">
-                            {topping.Name}{" "}
-                            {!topping.IsMultiple && (
-                              <span className="text-red-500 text-4xl">*</span>
-                            )}
-                          </h3>
-                          <div className="flex overflow-x-auto lg:grid lg:grid-cols-5 gap-1 pb-2">
-                            {topping.OptionsList?.map((option, optIdx) => (
-                              <div
-                                key={optIdx}
-                                onClick={() =>
-                                  handleOptionSelect(option, topping)
-                                }
-                                className={`flex-none lg:flex-auto cursor-pointer`}
-                              >
-                                <div
-                                  className={`w-[100px] md:w-[130px] h-full relative rounded-lg overflow-hidden flex flex-col items-center justify-start p-1 pb-2 transition-all duration-200 dark:border dark:border-[#121212] dark:bg-[#ffffff0f] ${
-                                    isOptionSelected(option, topping.Name)
-                                      ? "bg-[#ffd13e3b]  border-[#ffd13e7a] dark:bg-[#008c00]"
-                                      : ""
-                                  }`}
-                                  style={{
-                                    boxShadow: "3px 3px 5px rgb(255 0 0 / 5%)",
-                                  }}
-                                >
-                                  <Image
-                                    src={
-                                      option.ItemImage || "/default-topping.png"
-                                    }
-                                    width={70}
-                                    height={70}
-                                    alt={option.Name}
-                                    className="rounded-[10px] w-[70px] h-[70px] object-contain"
-                                  />
-                                  <div className="text-center mt-1">
-                                    <span className="text-[13px] text-[#555555] dark:text-white font-medium block leading-tight">
-                                      {option.Name}
-                                    </span>
-                                    {option.Description && (
-                                      <span className="text-[9px] text-[#555555] dark:text-white leading-3 block">
-                                        {option.Description}
+                          <h3 className="text-[20px] font-semibold flex items-center gap-2 p-2 dark:text-white"></h3>
+                          <div
+                            className="cursor-pointer p-6 bg-white rounded-lg hover:bg-gray-50 dark:hover:bg-[#303030] flex items-center justify-between shadow-md transition-all duration-200 mb-2"
+                            onClick={() => setExpandedOption(topping.Name)}
+                          >
+                            <div className="flex items-center gap-6">
+                              {topping.OptionsList &&
+                                topping.OptionsList[0] && (
+                                  <>
+                                    <Image
+                                      src={
+                                        topping.OptionsList[0].ItemImage ||
+                                        "/default-topping.png"
+                                      }
+                                      width={80}
+                                      height={80}
+                                      alt={topping.OptionsList[0].Name}
+                                      className="rounded-full shadow-lg"
+                                    />
+                                    <div className="flex flex-col gap-2">
+                                      <span className="dark:text-white text-lg font-medium">
+                                        {topping.Name}
+                                        {!topping.IsMultiple && (
+                                          <span className="text-red-500 text-4xl">
+                                            *
+                                          </span>
+                                        )}
                                       </span>
-                                    )}
-                                    {option.Price > 0 && (
-                                      <span className="text-red-500 text-[12px] block mt-1">
-                                        +Rs. {option.Price}
-                                      </span>
-                                    )}
-                                  </div>
-                                </div>
-                              </div>
-                            ))}
+                                      <button className="bg-[#FFC714] text-black px-3 py-1 rounded-full text-xs font-medium hover:bg-[#e5b313] transition-colors w-20">
+                                        Choose
+                                      </button>
+                                    </div>
+                                  </>
+                                )}
+                            </div>
                           </div>
                         </div>
                       ))}
                   </div>
                 ))}
+
+              {/* Add options popup */}
+              {expandedOption && (
+                <OptionsPopup
+                  topping={
+                    product.MenuSizesList.find(
+                      (cat) => cat.Size === selectedSize
+                    )?.FlavourAndToppingsList.find(
+                      (t) => t.Name === expandedOption
+                    )!
+                  }
+                  onClose={() => setExpandedOption(null)}
+                  onSelect={handleOptionSelect}
+                  selectedOptions={selectedOptions}
+                />
+              )}
 
               {/* <div className="flex flex-col gap-2 bg-white dark:bg-[#202020] md:rounded-xl md:shadow-md p-2 dark:text-white">
                 <h3 className="text-[14px] font-bold">Extra Comments:</h3>
@@ -442,26 +445,13 @@ const ProductPopup: React.FC<IProductProps> = ({
                   </div>
                 </div>
               </div> */}
-              <button
-                onClick={handleAddToCart}
-                disabled={isAddingToCart}
-                className="hidden lg:fixed bottom-4 left-4 right-4 md:static mt-1 md:mt-2 mb-2 w-full bg-[#FFC714] dark:text-[#000] text-[var(--text-primary)] font-extrabold py-4 md:py-3 px-6 rounded-t-2xl md:rounded-xl transition-colors shadow-lg z-50"
-              >
-                {isAddingToCart ? (
-                  <div className="flex items-center justify-center gap-2">
-                    <div className="w-5 h-5 border-2 border-black border-t-transparent rounded-full animate-spin" />
-                  </div>
-                ) : (
-                  "ADD TO ORDER"
-                )}
-              </button>
             </div>
           </div>
 
           <button
             onClick={handleAddToCart}
             disabled={isAddingToCart}
-            className="hidden md:fixed bottom-4 right-8 w-4/12 bg-[#FFC714] dark:text-[#000] text-[var(--text-primary)] font-extrabold py-4 px-6 rounded-full transition-colors shadow-lg z-50"
+            className="fixed bottom-4 left-4 right-4 md:left-auto md:right-8 md:w-4/12 bg-[#FFC714] dark:text-[#000] text-[var(--text-primary)] font-extrabold py-4 px-6 rounded-full transition-colors shadow-lg z-50"
           >
             {isAddingToCart ? (
               <div className="flex items-center justify-center gap-2">
