@@ -5,9 +5,14 @@ import { openToaster } from "@/redux/toaster/slice";
 import { MenuItemData, MenuItemOption } from "@/services/Home/types";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
-import { FaChevronDown } from "react-icons/fa";
+import { FaChevronDown, FaRegCheckCircle } from "react-icons/fa";
 import { FiUser } from "react-icons/fi";
-import { IoArrowDown, IoClose } from "react-icons/io5";
+import {
+  IoArrowDown,
+  IoCheckmarkCircle,
+  IoClose,
+  IoInformationCircleOutline,
+} from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
 import OptionsPopup from "./OptionsPopup";
 
@@ -38,7 +43,7 @@ const ProductPopup: React.FC<IProductProps> = ({
     Record<string, MenuItemOption[]>
   >({});
   const [selectedSize, setSelectedSize] = useState<string>("");
-  const [imageScale, setImageScale] = useState<number>(1);
+  const [imageScale, setImageScale] = useState<number>(0.8);
   const [expandedOption, setExpandedOption] = useState<string | null>(null);
 
   const [isAddingToCart, setIsAddingToCart] = useState<boolean>(false);
@@ -162,6 +167,10 @@ const ProductPopup: React.FC<IProductProps> = ({
     );
   };
 
+  const isMobile = () => {
+    return window.innerWidth < 768;
+  };
+
   const areAllRequiredOptionsSelected = () => {
     let requiredCategories =
       product?.MenuSizesList?.find(
@@ -187,9 +196,11 @@ const ProductPopup: React.FC<IProductProps> = ({
   };
 
   const resetSelections = () => {
+    setExpandedOption(null);
     setSelectedOptions({});
     setSelectedSize("");
     setSpecialInstructions("");
+    setImageScale(0.8);
   };
 
   useEffect(() => {
@@ -208,186 +219,303 @@ const ProductPopup: React.FC<IProductProps> = ({
 
   return (
     <>
-      <div className="fixed inset-0 z-50 flex items-start sm:items-center justify-center bg-black/50 backdrop-blur-sm transition-opacity duration-200 p-2 sm:p-4 overflow-y-auto">
-        <div
-          className={`w-full sm:max-w-[900px] min-h-screen sm:min-h-0 sm:h-[85vh] z-60 sm:rounded-3xl  bg-white dark:bg-[#121212]  ${
-            isOpen ? "slide-up" : "slide-down"
-          }`}
-        >
-          <div className="sticky top-0 left-0 right-0 z-[51] lg:hidden">
-            <div className="absolute left-0 flex justify-end p-4">
-              <button
-                onClick={() => {
-                  resetSelections();
-                  onClose();
-                }}
-                className="p-2 bg-[var(--primary-light)] rounded-full transition-colors w-12 h-12"
-              >
-                <FaChevronDown size={32} />
-              </button>
-            </div>
-          </div>
-          <div className="h-full flex flex-col md:flex-row relative">
-            <div className="w-full md:w-7/12 p-2 md:p-4">
-              {/* Product Header */}
-              <div className="w-full h-full relative rounded-xl shadow-sm p-4  flex items-center justify-center">
-                {isNewItem && (
-                  <span className="absolute top-6 right-6 z-10 bg-[#1F9226] text-white text-[12px] font-light px-2 py-0.5 rounded animate-bounce">
-                    New!
-                  </span>
-                )}
-                <Image
-                  src={product.ItemImage}
-                  width={400}
-                  height={400}
-                  alt={product.Name}
-                  className="rounded-xl w-full h-full object-cover transition-transform duration-300"
-                  style={{
-                    objectFit: "contain",
-                    width: "80%",
-                    height: "80%",
-                    transform: `scale(${imageScale})`,
+      <div className="fixed inset-0 z-50  bg-black/80 transition-opacity duration-200 overflow-y-auto">
+        <div className="flex items-center justify-center min-h-screen p-2 sm:p-4 overflow-y-auto">
+          <div
+            className={`w-full sm:max-w-[900px] h-full sm:min-h-0 sm:h-[85vh] z-60 sm:rounded-3xl  bg-white dark:bg-[#121212]  ${
+              isOpen ? "slide-up" : "slide-down"
+            }`}
+          >
+            <div className="sticky top-0 left-0 right-0 z-[51] lg:hidden">
+              <div className="absolute left-0 flex justify-end p-4">
+                <button
+                  onClick={() => {
+                    resetSelections();
+                    onClose();
                   }}
-                />
+                  className="p-2 bg-[var(--primary-light)] rounded-full transition-colors w-12 h-12"
+                >
+                  <FaChevronDown size={32} />
+                </button>
               </div>
             </div>
-
-            <div className="w-full md:w-5/12 p-2 md:p-4 overflow-y-auto bg-gray-100 dark:bg-[#202020] mb-20">
-              <div className=" p-4 rounded-lg shadow-sm mb-4">
-                <h2 className="text-[22px] font-extrabold leading-tight mb-1 dark:text-white">
-                  {product.Name}
-                </h2>
-                <p className="text-[#838383] text-[14px] leading-relaxed mb-2">
-                  {product.Description}
-                </p>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    {serving && (
-                      <div className="flex items-center bg-[var(--primary-light)] rounded px-2 py-1">
-                        <FiUser className="h-3 w-3 text-[var(--text-primary)]" />
-                        <span className="text-[12px] ml-1 dark:text-white">
-                          x {serving}
-                        </span>
-                      </div>
-                    )}
-                  </div>
-                  {!product.MenuSizesList?.some(
-                    (size) =>
-                      size.Size !== "-" && size.Size !== "." && size.Size !== ""
-                  ) && (
-                    <div className="text-[16px] font-semibold dark:text-white">
-                      Rs.
-                      {addressType === "Delivery"
-                        ? product.MenuSizesList[0].DeliveryPrice
-                        : product.MenuSizesList[0].TakeAwayPrice}
-                    </div>
-                  )}
-                </div>
-                {product.MenuSizesList?.some(
-                  (size) =>
-                    size.Size !== "-" && size.Size !== "." && size.Size !== ""
-                ) && (
-                  <div className="flex justify-center mb-4 overflow-x-auto rounded-full w-full">
-                    <div className="relative flex items-center bg-gray-100 dark:bg-[#303030] p-1 w-fit rounded-full whitespace-nowrap">
-                      {product.MenuSizesList.map(
-                        (size, idx) =>
-                          size.Size !== "-" &&
-                          size.Size !== "." &&
-                          size.Size !== "" && (
-                            <button
-                              key={idx}
-                              onClick={() => handleSizeSelect(size.Size)}
-                              className={`relative z-10 py-1.5 px-4 text-sm transition-all duration-300 flex-shrink-0 ${
-                                selectedSize === size.Size
-                                  ? "text-black font-medium"
-                                  : "text-gray-500"
-                              }`}
-                            >
-                              <span className="relative z-10 text-[12px]">
-                                {size.Size}
-                              </span>
-                              {selectedSize === size.Size && (
-                                <div className="absolute inset-0 bg-white rounded-full shadow-md transition-all duration-300" />
-                              )}
-                            </button>
-                          )
-                      )}
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              {(selectedSize ||
-                !product.MenuSizesList?.some(
-                  (size) =>
-                    size.Size !== "-" && size.Size !== "." && size.Size !== ""
-                )) &&
-                product.MenuSizesList?.map((category, index) => (
-                  <div key={index} className="rounded-[8px]">
-                    {(!selectedSize || category.Size === selectedSize) &&
-                      category.FlavourAndToppingsList?.map((topping, idx) => (
+            <div className="h-full flex flex-col md:flex-row relative">
+              <div className="w-full md:w-7/12 p-2 md:p-4">
+                {expandedOption && !isMobile() ? (
+                  <div className="grid grid-cols-3 gap-4 h-full overflow-y-auto p-4">
+                    {product.MenuSizesList.find(
+                      (cat) => cat.Size === selectedSize
+                    )
+                      ?.FlavourAndToppingsList.find(
+                        (t) => t.Name === expandedOption
+                      )
+                      ?.OptionsList.map((option) => (
                         <div
-                          key={idx}
-                          className="mb-1 px-2 shadow-sm rounded-[10px]"
+                          key={option.ID}
+                          onClick={() => {
+                            const currentTopping = product.MenuSizesList.find(
+                              (cat) => cat.Size === selectedSize
+                            )?.FlavourAndToppingsList.find(
+                              (t) => t.Name === expandedOption
+                            );
+                            if (currentTopping) {
+                              handleOptionSelect(option, currentTopping);
+                              if (!currentTopping.IsMultiple) {
+                                setExpandedOption(null);
+                              }
+                            }
+                          }}
+                          className={`cursor-pointer p-2 rounded-xl transition-all duration-200 
+              bg-white dark:bg-[#202020] hover:bg-gray-50 dark:hover:bg-[#303030]
+              flex flex-col items-center relative
+              ${
+                isOptionSelected(option, expandedOption)
+                  ? "border-2 border-[#FFC714]"
+                  : ""
+              }
+            `}
                         >
-                          <h3 className="text-[20px] font-semibold flex items-center gap-2 p-2 dark:text-white"></h3>
-                          <div
-                            className="cursor-pointer p-6 bg-white rounded-lg hover:bg-gray-50 dark:hover:bg-[#303030] flex items-center justify-between shadow-md transition-all duration-200 mb-2"
-                            onClick={() => setExpandedOption(topping.Name)}
-                          >
-                            <div className="flex items-center gap-6">
-                              {topping.OptionsList &&
-                                topping.OptionsList[0] && (
-                                  <>
-                                    <Image
-                                      src={
-                                        topping.OptionsList[0].ItemImage ||
-                                        "/default-topping.png"
-                                      }
-                                      width={80}
-                                      height={80}
-                                      alt={topping.OptionsList[0].Name}
-                                      className="rounded-full shadow-lg"
-                                    />
-                                    <div className="flex flex-col gap-2">
-                                      <span className="dark:text-white text-lg font-medium">
-                                        {topping.Name}
-                                        {!topping.IsMultiple && (
-                                          <span className="text-red-500 text-4xl">
-                                            *
-                                          </span>
-                                        )}
-                                      </span>
-                                      <button className="bg-[#FFC714] text-black px-3 py-1 rounded-full text-xs font-medium hover:bg-[#e5b313] transition-colors w-20">
-                                        Choose
-                                      </button>
-                                    </div>
-                                  </>
-                                )}
-                            </div>
-                          </div>
+                          <Image
+                            src={option.ItemImage || "/default-topping.png"}
+                            width={150}
+                            height={150}
+                            alt={option.Name}
+                            className="rounded-xl w-full h-36 object-contain"
+                          />
+                          <h3 className="font-bold text-[14px] text-center dark:text-white">
+                            {option.Name}
+                          </h3>
+                          {option.Price > 0 && (
+                            <p className="text-red-500 mt-2">
+                              +Rs. {option.Price}
+                            </p>
+                          )}
                         </div>
                       ))}
                   </div>
-                ))}
+                ) : (
+                  <div className="w-full h-full relative rounded-xl shadow-sm p-4  flex items-center justify-center">
+                    {isNewItem && (
+                      <span className="absolute top-6 right-6 z-10 bg-[#1F9226] text-white text-[12px] font-light px-2 py-0.5 rounded animate-bounce">
+                        New!
+                      </span>
+                    )}
+                    <Image
+                      src={product.ItemImage}
+                      width={400}
+                      height={400}
+                      alt={product.Name}
+                      className="rounded-xl w-full h-full object-cover transition-transform duration-300"
+                      style={{
+                        objectFit: "contain",
+                        width: "80%",
+                        height: "80%",
+                        transform: `scale(${imageScale})`,
+                      }}
+                    />
+                  </div>
+                )}
+              </div>
 
-              {/* Add options popup */}
-              {expandedOption && (
-                <OptionsPopup
-                  topping={
-                    product.MenuSizesList.find(
-                      (cat) => cat.Size === selectedSize
-                    )?.FlavourAndToppingsList.find(
-                      (t) => t.Name === expandedOption
-                    )!
-                  }
-                  onClose={() => setExpandedOption(null)}
-                  onSelect={handleOptionSelect}
-                  selectedOptions={selectedOptions}
-                />
-              )}
+              <div className="w-full md:w-5/12 p-2 md:p-4 overflow-y-auto bg-[#fcfcfc] dark:bg-[#202020] mb-20">
+                <div className=" p-4 rounded-lg mb-4">
+                  <div className="flex items-center gap-2">
+                    <h2 className="text-[24px] font-medium leading-tight mb-1 dark:text-white">
+                      {product.Name}
+                    </h2>
+                    <IoInformationCircleOutline className="w-5 h-5 text-gray-400" />
+                  </div>
+                  <p className="text-[#838383] text-[14px] leading-tight mb-2">
+                    {product.Description}
+                  </p>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      {serving && (
+                        <div className="flex items-center bg-[var(--primary-light)] rounded px-2 py-1">
+                          <FiUser className="h-3 w-3 text-[var(--text-primary)]" />
+                          <span className="text-[12px] ml-1 dark:text-white">
+                            x {serving}
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  {!product.MenuSizesList?.some(
+                    (size) => size.FlavourAndToppingsList?.length > 0
+                  ) && (
+                    <div className="w-full bg-gray-100 dark:bg-[#303030] rounded-full py-1 text-center mt-4">
+                      <span className="text-sm font-medium dark:text-white">
+                        1 pc
+                      </span>
+                    </div>
+                  )}
+                  {product.MenuSizesList?.some(
+                    (size) =>
+                      size.Size !== "-" && size.Size !== "." && size.Size !== ""
+                  ) && (
+                    <div className="flex justify-center mb-4 overflow-x-auto rounded-full w-full">
+                      <div className="relative flex items-center bg-gray-100 dark:bg-[#303030] p-1 w-full rounded-full whitespace-nowrap">
+                        {product.MenuSizesList.map(
+                          (size, idx) =>
+                            size.Size !== "-" &&
+                            size.Size !== "." &&
+                            size.Size !== "" && (
+                              <button
+                                key={idx}
+                                onClick={() => handleSizeSelect(size.Size)}
+                                className={`relative z-10 py-1.5 px-4 text-sm transition-all duration-300 flex-shrink-0 ${
+                                  selectedSize === size.Size
+                                    ? "text-black font-medium"
+                                    : "text-gray-500"
+                                }`}
+                              >
+                                <span className="relative z-10 text-[12px]">
+                                  {size.Size}
+                                </span>
+                                {selectedSize === size.Size && (
+                                  <div className="absolute inset-0 bg-white rounded-full shadow-md transition-all duration-300" />
+                                )}
+                              </button>
+                            )
+                        )}
+                      </div>
+                    </div>
+                  )}
+                </div>
 
-              {/* <div className="flex flex-col gap-2 bg-white dark:bg-[#202020] md:rounded-xl md:shadow-md p-2 dark:text-white">
+                {(selectedSize ||
+                  !product.MenuSizesList?.some(
+                    (size) =>
+                      size.Size !== "-" && size.Size !== "." && size.Size !== ""
+                  )) &&
+                  product.MenuSizesList?.map((category, index) => (
+                    <div key={index} className="rounded-[8px]">
+                      {(!selectedSize || category.Size === selectedSize) &&
+                        category.FlavourAndToppingsList?.map((topping, idx) => (
+                          <div
+                            key={idx}
+                            className="mb-1 px-2 shadow-sm rounded-[10px]"
+                          >
+                            <h3 className="text-[20px] font-semibold flex items-center gap-2 p-2 dark:text-white">
+                              {topping.Name}
+                              {!topping.IsMultiple && (
+                                <span className="text-red-500 text-4xl">*</span>
+                              )}
+                            </h3>
+
+                            {topping.IsMultiple ? (
+                              <div className="grid grid-cols-3 gap-2 p-1">
+                                {topping.OptionsList.map((option) => (
+                                  <div
+                                    key={option.ID}
+                                    onClick={() =>
+                                      handleOptionSelect(option, topping)
+                                    }
+                                    className={`cursor-pointer p-3 rounded-xl shadow-lg transition-all duration-200 
+                                    bg-white dark:bg-[#202020] dark:hover:bg-[#303030]
+                                    flex flex-col items-center relative
+                                    ${
+                                      isOptionSelected(option, topping.Name)
+                                        ? "border border-[#FFC714]"
+                                        : ""
+                                    }`}
+                                  >
+                                    {isOptionSelected(option, topping.Name) && (
+                                      <div className="absolute top-2 right-2 z-10">
+                                        <FaRegCheckCircle className="w-6 h-6 text-[#FFC714]" />
+                                      </div>
+                                    )}
+                                    <Image
+                                      src={
+                                        option.ItemImage ||
+                                        "/default-topping.png"
+                                      }
+                                      width={100}
+                                      height={100}
+                                      alt={option.Name}
+                                      className="rounded-xl w-full h-24 object-contain"
+                                    />
+                                    <h3 className="font-medium text-[12px] text-center dark:text-white  leading-tight">
+                                      {option.Name}
+                                    </h3>
+                                    {option.Price > 0 && (
+                                      <p className="text-red-500 mt-1 text-[16px]">
+                                        +Rs. {option.Price}
+                                      </p>
+                                    )}
+                                  </div>
+                                ))}
+                              </div>
+                            ) : (
+                              <div
+                                className="cursor-pointer p-6 bg-white rounded-lg hover:bg-gray-50 dark:hover:bg-[#303030] flex items-center justify-between shadow-md transition-all duration-200 mb-2"
+                                onClick={() => setExpandedOption(topping.Name)}
+                              >
+                                <div className="flex items-center gap-2">
+                                  {topping.OptionsList &&
+                                    topping.OptionsList[0] && (
+                                      <>
+                                        <Image
+                                          src={
+                                            topping.OptionsList[0].ItemImage ||
+                                            "/default-topping.png"
+                                          }
+                                          width={100}
+                                          height={100}
+                                          alt={topping.OptionsList[0].Name}
+                                          className="rounded-full shadow-lg h-28 object-cover"
+                                        />
+                                        <div className="flex flex-col gap-2">
+                                          <span className="dark:text-white text-lg font-bold">
+                                            {selectedOptions[topping.Name]
+                                              ?.length > 0
+                                              ? selectedOptions[topping.Name]
+                                                  .map((opt: any) => opt.Name)
+                                                  .join(", ")
+                                              : topping.OptionsList[0].Name}
+                                          </span>
+                                          <button className="bg-[#FFC714] text-black px-3 py-1 rounded-full text-xs font-medium hover:bg-[#e5b313] transition-colors w-20">
+                                            Replace
+                                          </button>
+                                        </div>
+                                      </>
+                                    )}
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        ))}
+                    </div>
+                  ))}
+
+                {/* Add options popup */}
+                {expandedOption && isMobile() && (
+                  <OptionsPopup
+                    topping={
+                      product.MenuSizesList?.find(
+                        (cat) => cat.Size === selectedSize
+                      )?.FlavourAndToppingsList?.find(
+                        (t) =>
+                          t.Name === expandedOption && t.OptionsList?.length > 0
+                      ) || {
+                        ID: 0,
+                        Name: expandedOption,
+                        Description: "",
+                        RemoteCode: "",
+                        Price: 0,
+                        IsActive: true,
+                        IsMultiple: false,
+                        SortOrder: 0,
+                        OptionsList: [],
+                      }
+                    }
+                    onClose={() => setExpandedOption(null)}
+                    onSelect={handleOptionSelect}
+                    selectedOptions={selectedOptions}
+                  />
+                )}
+
+                {/* <div className="flex flex-col gap-2 bg-white dark:bg-[#202020] md:rounded-xl md:shadow-md p-2 dark:text-white">
                 <h3 className="text-[14px] font-bold">Extra Comments:</h3>
 
                 <textarea
@@ -445,29 +573,33 @@ const ProductPopup: React.FC<IProductProps> = ({
                   </div>
                 </div>
               </div> */}
-            </div>
-          </div>
-
-          <button
-            onClick={handleAddToCart}
-            disabled={isAddingToCart}
-            className="fixed bottom-4 left-4 right-4 md:left-auto md:right-8 md:w-4/12 bg-[#FFC714] dark:text-[#000] text-[var(--text-primary)] font-extrabold py-4 px-6 rounded-full transition-colors shadow-lg z-50"
-          >
-            {isAddingToCart ? (
-              <div className="flex items-center justify-center gap-2">
-                <div className="w-5 h-5 border-2 border-black border-t-transparent rounded-full animate-spin" />
               </div>
-            ) : (
-              "ADD TO ORDER"
-            )}
-          </button>
+            </div>
 
-          <button
-            onClick={onClose}
-            className="hidden lg:block absolute top-4 lg:right-[calc((100%-900px)/2-60px)] float-right p-2 bg-[var(--primary-light)] rounded-full transition-colors w-12 h-12 z-50"
-          >
-            <IoClose size={32} />
-          </button>
+            <button
+              onClick={handleAddToCart}
+              disabled={isAddingToCart}
+              className="fixed bottom-4 left-4 right-4 md:left-auto md:right-8 md:w-4/12 bg-[#FFC714] dark:text-[#000] text-white font-medium py-2 px-6 rounded-full transition-colors shadow-lg z-50 text-sm"
+            >
+              {isAddingToCart ? (
+                <div className="flex items-center justify-center gap-2">
+                  <div className="w-5 h-5 border-2 border-black border-t-transparent rounded-full animate-spin" />
+                </div>
+              ) : (
+                `Add to cart for Rs. ${calculateTotal()}`
+              )}
+            </button>
+
+            <button
+              onClick={() => {
+                resetSelections();
+                onClose();
+              }}
+              className="hidden lg:block absolute top-2 lg:right-[calc((100%-900px)/2-60px)] float-right p-2 rounded-full transition-colors w-12 h-12 z-50 text-white"
+            >
+              <IoClose size={36} />
+            </button>
+          </div>
         </div>
       </div>
     </>

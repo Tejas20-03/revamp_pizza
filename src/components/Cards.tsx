@@ -109,13 +109,15 @@ const Cards: React.FC<Iprops> = ({ data, heading, isLoading }) => {
             {data?.map((item, index) => (
               <div
                 key={index}
-                className="flex flex-row md:flex-col p-1 rounded-[10px] pt-[5px] justify-between bg-white dark:bg-[#202020] relative h-fit border-b"
+                className="flex flex-row md:flex-col p-1 rounded-[10px] pt-[5px] justify-between bg-white dark:bg-[#202020] relative"
                 onClick={() => handleAddToCart(item)}
               >
-                <div
-                  className="relative w-1/3 md:w-full rounded-[15px] p-1 transition-[filter,transform] cursor-pointer duration-200 linear"
-
-                >
+                <div className="relative w-1/3 md:w-full rounded-[15px] p-1 transition-[filter,transform] cursor-pointer duration-200 linear">
+                  {item.DiscountPercentage > 0 && (
+                    <span className="absolute top-2 left-2 z-10 bg-[#FFC714] dark:text-black text-[var(--text-primary)] text-[10px] font-normal px-1 py-0 rounded-lg animate-bounce">
+                      Save {item.DiscountPercentage}%
+                    </span>
+                  )}
                   {item.IsNewItem && (
                     <span className="absolute top-2 right-2 z-10 bg-[#1F9226] text-white text-[12px] font-light px-1 py-0 rounded">
                       New!
@@ -132,7 +134,7 @@ const Cards: React.FC<Iprops> = ({ data, heading, isLoading }) => {
                 </div>
                 <div className="flex flex-col flex-1 px-1 mb-2 justify-center">
                   <div className="flex justify-between items-center gap-1">
-                    <h3 className="text-[16px] font-bold py-1 flex-1 leading-tight dark:text-white">
+                    <h3 className="text-[20px] font-medium py-1 flex-1 leading-tight dark:text-white">
                       {item.Name}
                     </h3>
                     <div className="h-8 w-8 rounded-full bg-[#FFC714] hidden items-center cursor-pointer justify-center shadow-[0px_10px_15px_rgba(236,99,0,0.44)]">
@@ -145,23 +147,14 @@ const Cards: React.FC<Iprops> = ({ data, heading, isLoading }) => {
                     </div>
                   </div>
 
-
-
-
                   {item.Description && (
                     <div
-                      className="text-[11px] md:text-xs text-gray-500 text-left md:mt-auto md:text-justify"
+                      className="text-[14px] md:text-xs text-gray-500 text-left md:text-justify mt-1"
                       dangerouslySetInnerHTML={{ __html: item.Description }}
                     />
                   )}
                   <div className="flex flex-col justify-between mt-2 gap-2">
                     <div className="flex flex-row gap-4">
-                      {item.DiscountPercentage > 0 && (
-                        <span className="bg-[#FFC714] dark:text-black text-[var(--text-primary)] text-[10px] font-normal px-1 py-0 rounded animate-bounce w-fit">
-                          Save {item.DiscountPercentage}%
-                        </span>
-                      )}
-
                       {item.Serving && Number(item.Serving) > 0 && (
                         <div className="flex items-center bg-[var(--primary-light)] rounded px-1 py-0.5 w-fit">
                           <FiUser className="h-3 w-3 text-[var(--text-primary)]" />
@@ -171,20 +164,28 @@ const Cards: React.FC<Iprops> = ({ data, heading, isLoading }) => {
                         </div>
                       )}
                     </div>
-                    <div className="flex items-start gap-2">
-                      {Number(item.DiscountedPrice) > 0 && (
-                        <span
-                          className={`text-[13px] font-medium bg-[#fff0e6] text-[#D15700]
-                       px-3 py-1 rounded-full dark:text-white`}
-                        >
-                          Rs.{item.DiscountedPrice}
-                        </span>
-                      )}
-                      {Number(item.MinDeliveryPrice || 0) > 0 && (
-                        <span className="text-[12px] font-normal relative after:absolute after:w-[120%] after:h-[2px] after:bg-red-400 after:block after:left-[-2px] after:top-[50%] after:rotate-[-10deg] after:origin-center">
-                          Rs.{item.MinDeliveryPrice}
-                        </span>
-                      )}
+                    <div className="flex items-center justify-between w-full">
+                      <div className="flex items-start flex-col">
+                        {Number(item.DiscountedPrice) > 0 && (
+                          <span
+                            className={`text-[20px] font-bold 
+                         dark:text-white`}
+                          >
+                            Rs.{item.DiscountedPrice}
+                          </span>
+                        )}
+                        {Number(item.MinDeliveryPrice || 0) > 0 && (
+                          <span className="text-[12px] font-normal relative after:absolute after:w-[120%] after:h-[2px] after:bg-red-400 after:block after:left-[-2px] after:top-[50%] after:rotate-[-10deg] after:origin-center">
+                            Rs.{item.MinDeliveryPrice}
+                          </span>
+                        )}
+                      </div>
+                      <button
+                        onClick={() => handleAddToCart(item)}
+                        className="px-6 py-2 rounded-full bg-[#fff0e6] text-[#D15700] text-[16px] font-medium hover:opacity-90 transition-opacity"
+                      >
+                        Choose
+                      </button>
                     </div>
                   </div>
                 </div>
