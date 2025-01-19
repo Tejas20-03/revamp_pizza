@@ -126,10 +126,10 @@ const Cards: React.FC<Iprops> = ({ data, heading, isLoading }) => {
                   <Image
                     src={item.ImageBase64}
                     alt={item.Name}
-                    width={300} // Increase from 100
-                    height={300} // Increase from 100
+                    width={300}
+                    height={300} 
                     className="w-full h-full rounded-2xl object-contain"
-                    quality={100} // Add this line
+                    quality={100} 
                   />
                 </div>
                 <div className="flex flex-col flex-1 px-1 mb-2 justify-center">

@@ -49,20 +49,32 @@ const ProductPopup: React.FC<IProductProps> = ({
   const [isAddingToCart, setIsAddingToCart] = useState<boolean>(false);
 
   const handleOptionSelect = (option: any, category: any) => {
-    const categoryName = category.Name;
-    setSelectedOptions((prev) => {
-      const currentSelected = prev[categoryName] || [];
-      if (category.IsMultiple) {
-        const exists = currentSelected.find((opt: any) => opt.ID === option.ID);
-        return {
-          ...prev,
-          [categoryName]: exists
-            ? currentSelected.filter((opt: any) => opt.ID !== option.ID)
-            : [...currentSelected, option],
-        };
+    if (category && category.OptionsList) {
+      const selectedOption = category.OptionsList.find(
+        (opt: any) => opt.ID === option.ID
+      );
+      if (selectedOption) {
+        setSelectedOptions((prev) => {
+          const categoryName = category.Name;
+          if (category.IsMultiple) {
+            const currentSelected = prev[categoryName] || [];
+            const exists = currentSelected.find(
+              (opt: any) => opt.ID === option.ID
+            );
+            return {
+              ...prev,
+              [categoryName]: exists
+                ? currentSelected.filter((opt: any) => opt.ID !== option.ID)
+                : [...currentSelected, option],
+            };
+          }
+          return { ...prev, [categoryName]: [option] };
+        });
       }
-      return { ...prev, [categoryName]: [option] };
-    });
+    }
+    if (!category.IsMultiple) {
+      setExpandedOption(null);
+    }
   };
 
   useEffect(() => {
@@ -205,22 +217,40 @@ const ProductPopup: React.FC<IProductProps> = ({
 
   useEffect(() => {
     if (isOpen) {
-      // Lock scroll
+      const scrollPosition = window.scrollY;
+      document.body.dataset.scrollPosition = scrollPosition.toString();
       document.body.style.overflow = "hidden";
       document.body.style.position = "fixed";
+      document.body.style.top = `-${scrollPosition}px`;
       document.body.style.width = "100%";
     } else {
-      // Restore scroll
-      document.body.style.overflow = "unset";
-      document.body.style.position = "static";
-      document.body.style.width = "auto";
+      const scrollPosition = parseInt(
+        document.body.dataset.scrollPosition || "0"
+      );
+      document.body.style.removeProperty("overflow");
+      document.body.style.removeProperty("position");
+      document.body.style.removeProperty("top");
+      document.body.style.removeProperty("width");
+      requestAnimationFrame(() => {
+        window.scrollTo({
+          top: scrollPosition,
+          behavior: "instant",
+        });
+      });
     }
 
     return () => {
-      // Cleanup
-      document.body.style.overflow = "unset";
-      document.body.style.position = "static";
-      document.body.style.width = "auto";
+      document.body.style.removeProperty("overflow");
+      document.body.style.removeProperty("position");
+      document.body.style.removeProperty("top");
+      document.body.style.removeProperty("width");
+      const scrollPosition = parseInt(
+        document.body.dataset.scrollPosition || "0"
+      );
+      window.scrollTo({
+        top: scrollPosition,
+        behavior: "instant",
+      });
     };
   }, [isOpen]);
 
@@ -252,29 +282,34 @@ const ProductPopup: React.FC<IProductProps> = ({
               <div className="w-full md:w-7/12 p-2 md:p-4">
                 {expandedOption && !isMobile() ? (
                   <div className="grid grid-cols-3 gap-4 h-full overflow-y-auto p-4">
-                    {product.MenuSizesList.find(
-                      (cat) => cat.Size === selectedSize
-                    )
-                      ?.FlavourAndToppingsList.find(
+                    {(
+                      product.MenuSizesList?.find(
+                        (cat) => cat.Size === selectedSize
+                      )?.FlavourAndToppingsList?.find(
                         (t) => t.Name === expandedOption
-                      )
-                      ?.OptionsList.map((option) => (
-                        <div
-                          key={option.ID}
-                          onClick={() => {
-                            const currentTopping = product.MenuSizesList.find(
+                      )?.OptionsList ||
+                      product.MenuSizesList[0].FlavourAndToppingsList.find(
+                        (t) => t.Name === expandedOption
+                      )?.OptionsList ||
+                      []
+                    ).map((option) => (
+                      <div
+                        key={option.ID}
+                        onClick={() => {
+                          const currentTopping =
+                            product.MenuSizesList?.find(
                               (cat) => cat.Size === selectedSize
-                            )?.FlavourAndToppingsList.find(
+                            )?.FlavourAndToppingsList?.find(
+                              (t) => t.Name === expandedOption
+                            ) ||
+                            product.MenuSizesList[0].FlavourAndToppingsList.find(
                               (t) => t.Name === expandedOption
                             );
-                            if (currentTopping) {
-                              handleOptionSelect(option, currentTopping);
-                              if (!currentTopping.IsMultiple) {
-                                setExpandedOption(null);
-                              }
-                            }
-                          }}
-                          className={`cursor-pointer p-2 rounded-xl transition-all duration-200 
+                          if (currentTopping) {
+                            handleOptionSelect(option, currentTopping);
+                          }
+                        }}
+                        className={`cursor-pointer p-2 rounded-xl transition-all duration-200 
               bg-white dark:bg-[#202020] hover:bg-gray-50 dark:hover:bg-[#303030]
               flex flex-col items-center relative
               ${
@@ -283,24 +318,24 @@ const ProductPopup: React.FC<IProductProps> = ({
                   : ""
               }
             `}
-                        >
-                          <Image
-                            src={option.ItemImage || "/default-topping.png"}
-                            width={150}
-                            height={150}
-                            alt={option.Name}
-                            className="rounded-xl w-full h-36 object-contain"
-                          />
-                          <h3 className="font-bold text-[14px] text-center dark:text-white">
-                            {option.Name}
-                          </h3>
-                          {option.Price > 0 && (
-                            <p className="text-red-500 mt-2">
-                              +Rs. {option.Price}
-                            </p>
-                          )}
-                        </div>
-                      ))}
+                      >
+                        <Image
+                          src={option.ItemImage || "/default-topping.png"}
+                          width={150}
+                          height={150}
+                          alt={option.Name}
+                          className="rounded-xl w-full h-36 object-contain"
+                        />
+                        <h3 className="font-bold text-[14px] text-center dark:text-white">
+                          {option.Name}
+                        </h3>
+                        {option.Price > 0 && (
+                          <p className="text-red-500 mt-2">
+                            +Rs. {option.Price}
+                          </p>
+                        )}
+                      </div>
+                    ))}
                   </div>
                 ) : (
                   <div className="w-full h-full relative rounded-xl shadow-sm p-4  flex items-center justify-center">
@@ -399,7 +434,10 @@ const ProductPopup: React.FC<IProductProps> = ({
                   )) &&
                   product.MenuSizesList?.map((category, index) => (
                     <div key={index} className="rounded-[8px]">
-                      {(!selectedSize || category.Size === selectedSize) &&
+                      {(!selectedSize ||
+                        category.Size === selectedSize ||
+                        category.Size === "-" ||
+                        category.Size === ".") &&
                         category.FlavourAndToppingsList?.map((topping, idx) => (
                           <div
                             key={idx}
@@ -483,7 +521,13 @@ const ProductPopup: React.FC<IProductProps> = ({
                                                   .join(", ")
                                               : topping.OptionsList[0].Name}
                                           </span>
-                                          <button className="bg-[#FFC714] text-black px-3 py-1 rounded-full text-xs font-medium hover:bg-[#e5b313] transition-colors w-20">
+                                          <button
+                                            onClick={(e) => {
+                                              e.stopPropagation(); // Prevent parent div click
+                                              setExpandedOption(topping.Name);
+                                            }}
+                                            className="bg-[#FFC714] text-black px-3 py-1 rounded-full text-xs font-medium hover:bg-[#e5b313] transition-colors w-20"
+                                          >
                                             Replace
                                           </button>
                                         </div>
@@ -589,8 +633,9 @@ const ProductPopup: React.FC<IProductProps> = ({
           topping={
             product.MenuSizesList?.find(
               (cat) => cat.Size === selectedSize
-            )?.FlavourAndToppingsList?.find(
-              (t) => t.Name === expandedOption && t.OptionsList?.length > 0
+            )?.FlavourAndToppingsList?.find((t) => t.Name === expandedOption) ||
+            product.MenuSizesList[0].FlavourAndToppingsList.find(
+              (t) => t.Name === expandedOption
             ) || {
               ID: 0,
               Name: expandedOption,
