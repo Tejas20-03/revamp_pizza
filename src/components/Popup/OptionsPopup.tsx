@@ -8,6 +8,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
+import { useEffect } from "react";
 
 interface OptionType {
   ID: number;
@@ -36,6 +37,20 @@ const OptionsPopup: React.FC<OptionsPopupProps> = ({
   onSelect,
   selectedOptions,
 }) => {
+  useEffect(() => {
+    // Lock scroll when popup mounts
+    document.body.style.overflow = "hidden";
+    document.body.style.position = "fixed";
+    document.body.style.width = "100%";
+
+    return () => {
+      // Restore scroll when popup unmounts
+      document.body.style.overflow = "unset";
+      document.body.style.position = "static";
+      document.body.style.width = "auto";
+    };
+  }, []);
+
   const isOptionSelected = (option: OptionType) => {
     return selectedOptions?.[topping.Name]?.some(
       (opt: OptionType) => opt.ID === option.ID
@@ -44,12 +59,12 @@ const OptionsPopup: React.FC<OptionsPopupProps> = ({
 
   return (
     <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/50 backdrop-blur-sm">
-      <div className="w-[90%] max-w-[900px] rounded-xl p-2 h-[80vh]">
+      <div className="w-[80%] max-w-[900px] rounded-xl h-[80vh] max-h-[800px]">
         <div className="flex justify-end items-center mb-4">
           {" "}
           {/* Changed justify-between to justify-end */}
           <button onClick={onClose} className="p-2 rounded-full text-white">
-            <IoClose size={24} />
+            <IoClose size={32} />
           </button>
         </div>
         {topping && topping.OptionsList && topping.OptionsList.length > 0 && (

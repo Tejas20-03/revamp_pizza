@@ -128,7 +128,7 @@ const Cards: React.FC<Iprops> = ({ data, heading, isLoading }) => {
                     alt={item.Name}
                     width={300} // Increase from 100
                     height={300} // Increase from 100
-                    className="w-full h-full rounded-2xl object-cover"
+                    className="w-full h-full rounded-2xl object-contain"
                     quality={100} // Add this line
                   />
                 </div>

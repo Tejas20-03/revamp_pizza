@@ -205,13 +205,22 @@ const ProductPopup: React.FC<IProductProps> = ({
 
   useEffect(() => {
     if (isOpen) {
+      // Lock scroll
       document.body.style.overflow = "hidden";
+      document.body.style.position = "fixed";
+      document.body.style.width = "100%";
     } else {
+      // Restore scroll
       document.body.style.overflow = "unset";
+      document.body.style.position = "static";
+      document.body.style.width = "auto";
     }
 
     return () => {
+      // Cleanup
       document.body.style.overflow = "unset";
+      document.body.style.position = "static";
+      document.body.style.width = "auto";
     };
   }, [isOpen]);
 
@@ -488,33 +497,6 @@ const ProductPopup: React.FC<IProductProps> = ({
                     </div>
                   ))}
 
-                {/* Add options popup */}
-                {expandedOption && isMobile() && (
-                  <OptionsPopup
-                    topping={
-                      product.MenuSizesList?.find(
-                        (cat) => cat.Size === selectedSize
-                      )?.FlavourAndToppingsList?.find(
-                        (t) =>
-                          t.Name === expandedOption && t.OptionsList?.length > 0
-                      ) || {
-                        ID: 0,
-                        Name: expandedOption,
-                        Description: "",
-                        RemoteCode: "",
-                        Price: 0,
-                        IsActive: true,
-                        IsMultiple: false,
-                        SortOrder: 0,
-                        OptionsList: [],
-                      }
-                    }
-                    onClose={() => setExpandedOption(null)}
-                    onSelect={handleOptionSelect}
-                    selectedOptions={selectedOptions}
-                  />
-                )}
-
                 {/* <div className="flex flex-col gap-2 bg-white dark:bg-[#202020] md:rounded-xl md:shadow-md p-2 dark:text-white">
                 <h3 className="text-[14px] font-bold">Extra Comments:</h3>
 
@@ -602,6 +584,30 @@ const ProductPopup: React.FC<IProductProps> = ({
           </div>
         </div>
       </div>
+      {expandedOption && isMobile() && (
+        <OptionsPopup
+          topping={
+            product.MenuSizesList?.find(
+              (cat) => cat.Size === selectedSize
+            )?.FlavourAndToppingsList?.find(
+              (t) => t.Name === expandedOption && t.OptionsList?.length > 0
+            ) || {
+              ID: 0,
+              Name: expandedOption,
+              Description: "",
+              RemoteCode: "",
+              Price: 0,
+              IsActive: true,
+              IsMultiple: false,
+              SortOrder: 0,
+              OptionsList: [],
+            }
+          }
+          onClose={() => setExpandedOption(null)}
+          onSelect={handleOptionSelect}
+          selectedOptions={selectedOptions}
+        />
+      )}
     </>
   );
 };
