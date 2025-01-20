@@ -8,8 +8,6 @@ import React, { useEffect, useState } from "react";
 import { FaChevronDown, FaRegCheckCircle } from "react-icons/fa";
 import { FiUser } from "react-icons/fi";
 import {
-  IoArrowDown,
-  IoCheckmarkCircle,
   IoClose,
   IoInformationCircleOutline,
 } from "react-icons/io5";
@@ -71,9 +69,6 @@ const ProductPopup: React.FC<IProductProps> = ({
           return { ...prev, [categoryName]: [option] };
         });
       }
-    }
-    if (!category.IsMultiple) {
-      setExpandedOption(null);
     }
   };
 
