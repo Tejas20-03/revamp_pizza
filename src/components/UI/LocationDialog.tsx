@@ -16,7 +16,7 @@ const LocationDisplay = ({
   return (
     <div className="md:p-2">
       <div className="bg-[var(--primary-light)] p-2 rounded-lg flex justify-between dark:text-white items-center border border-yellow-200">
-        <div>
+        <div className="font-semibold flex flex-row">
           <p className="text-[12px] ">Selected {addressType}:</p>
           <p className="text-[12px]">
             {city && (addressType === "Delivery" ? area : outlet)

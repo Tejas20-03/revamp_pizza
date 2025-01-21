@@ -54,7 +54,7 @@ const OptionSlide = ({
           height={250}
           alt={option.Name}
           quality={100}
-          className="rounded-[10px] w-[180px] h-[180px] object-contain"
+          className="rounded-[10px] w-[250px] h-[250px] object-cover"
         />
       </div>
       <div className="flex flex-col items-center text-center flex-1">
@@ -62,20 +62,17 @@ const OptionSlide = ({
           {option.Name}
         </span>
         {option.Description && (
-          <span className="text-[12px] text-[#555555] dark:text-white block mt-2">
+          <span className="text-[12px] dark:text-white block mt-2">
             {option.Description}
           </span>
         )}
-        <span className="block text-center mt-2 bg-[#FFF0E6] text-[#D15700] px-4 py-2 rounded-full text-[12px]">
-          Change composition
-        </span>
-      </div>
-      <div className="flex items-center justify-between gap-4 w-full mt-auto">
         {option.Price > 0 && (
-          <span className="text-red-500 text-[16px] whitespace-nowrap px-4">
+          <span className="text-black font-bold text-[20px] whitespace-nowrap px-4">
             +Rs. {option.Price}
           </span>
         )}
+      </div>
+      <div className="flex items-center justify-between gap-4 w-full mt-auto">
         <button
           onClick={() => onSelect(option, topping)}
           className={`w-full px-2 py-4 rounded-full text-[16px] font-semibold transition-colors ${
@@ -135,7 +132,7 @@ function OptionsPopup({
           <IoClose size={32} className="text-white" />
         </button>
         <div className="flex items-center justify-center h-full">
-          <div className="w-full max-w-[100vw] md:max-w-[80vw] h-[77vh] relative ">
+          <div className="w-full max-w-[100vw] md:max-w-[80vw] h-[60vh] relative ">
             <div className="absolute -top-8 left-0 right-0 z-10 flex justify-center">
               <div className="text-white text-lg font-medium">
                 {currentSlide} / {topping.OptionsList.length}

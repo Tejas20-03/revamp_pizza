@@ -99,7 +99,7 @@ const Cards: React.FC<Iprops> = ({ data, heading, isLoading }) => {
       <div className="xs:pl-[5px] pb-[10px] lg:pr-0 xs:pr-[5px]">
         <h2
           id={heading}
-          className="text-[26px] text-manrope md:text-[32px] text-[#2A2a2a] dark:text-white font-bold my-4 mx-2 border-t-2 dark:border-[#202020] pt-2"
+          className="text-[19px] text-manrope md:text-[22px] text-[#2A2a2a] dark:text-white font-bold my-4 mx-4 border-t-2 dark:border-[#202020] pt-2"
         >
           {heading}
         </h2>
@@ -132,9 +132,9 @@ const Cards: React.FC<Iprops> = ({ data, heading, isLoading }) => {
                     quality={100}
                   />
                 </div>
-                <div className="flex flex-col flex-1 px-1 mb-2 justify-center">
+                <div className="flex flex-col flex-1 px-1 mb-2 justify-start">
                   <div className="flex justify-between items-center gap-1">
-                    <h3 className="text-[18px] font-bold py-1 flex-1 leading-tight dark:text-white">
+                    <h3 className="text-[15px] font-bold py-1 flex-1 leading-tight dark:text-white">
                       {item.Name}
                     </h3>
                     <div className="h-8 w-8 rounded-full bg-[#FFC714] hidden items-center cursor-pointer justify-center shadow-[0px_10px_15px_rgba(236,99,0,0.44)]">
@@ -165,7 +165,7 @@ const Cards: React.FC<Iprops> = ({ data, heading, isLoading }) => {
                       )}
                     </div>
                     <div className="flex items-center justify-between w-full">
-                      <div className="flex items-start flex-col">
+                      <div className="flex items-center flex-row gap-2">
                         {Number(item.DiscountedPrice) > 0 && (
                           <span
                             className={`text-[14px] font-bold 
@@ -182,7 +182,7 @@ const Cards: React.FC<Iprops> = ({ data, heading, isLoading }) => {
                       </div>
                       <button
                         onClick={() => handleAddToCart(item)}
-                        className="hidden md:block px-6 py-2 rounded-full bg-[#fff0e6] text-[#D15700] text-[16px] font-medium hover:opacity-90 transition-opacity"
+                        className="hidden md:block px-6 py-1 rounded-full bg-[#fff0e6] text-[#D15700] text-[13px] font-medium hover:opacity-90 transition-opacity"
                       >
                         Choose
                       </button>

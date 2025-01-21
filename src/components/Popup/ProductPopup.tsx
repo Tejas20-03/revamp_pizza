@@ -7,10 +7,7 @@ import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { FaChevronDown, FaRegCheckCircle } from "react-icons/fa";
 import { FiUser } from "react-icons/fi";
-import {
-  IoClose,
-  IoInformationCircleOutline,
-} from "react-icons/io5";
+import { IoClose, IoInformationCircleOutline } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
 import OptionsPopup from "./OptionsPopup";
 
@@ -254,27 +251,27 @@ const ProductPopup: React.FC<IProductProps> = ({
   return (
     <>
       <div className="fixed inset-0 z-50  bg-black/80 transition-opacity duration-200 overflow-y-auto">
-        <div className="flex items-center justify-center min-h-screen p-2 sm:p-4 overflow-y-auto">
+        <div className="flex items-center justify-center min-h-screen p-2 sm:p-4 overflow-hidden">
           <div
             className={`w-full sm:max-w-[900px] h-full sm:min-h-0 sm:h-[85vh] z-60 sm:rounded-3xl  bg-white dark:bg-[#121212]  ${
               isOpen ? "slide-up" : "slide-down"
-            }`}
+            } overflow-hidden`}
           >
-            <div className="sticky top-0 left-0 right-0 z-[51] lg:hidden">
-              <div className="absolute left-0 flex justify-end p-4">
+            <div className="absolute top-0 left-0  z-[51] lg:hidden bg-white dark:bg-[#121212]">
+              <div className="fixed left-0 flex justify-end p-4">
                 <button
                   onClick={() => {
                     resetSelections();
                     onClose();
                   }}
-                  className="p-2 bg-[var(--primary-light)] rounded-full transition-colors w-12 h-12"
+                  className="p-2 bg-[var(--primary-light)] rounded-full transition-colors w-10 h-10"
                 >
-                  <FaChevronDown size={32} />
+                  <FaChevronDown size={24} />
                 </button>
               </div>
             </div>
             <div className="h-full flex flex-col md:flex-row relative">
-              <div className="w-full md:w-7/12 p-2 md:p-4">
+              <div className="w-full md:w-6/12 p-2 md:p-4">
                 {expandedOption && !isMobile() ? (
                   <div className="grid grid-cols-3 gap-4 h-full overflow-y-auto p-4">
                     {(
@@ -356,70 +353,86 @@ const ProductPopup: React.FC<IProductProps> = ({
                 )}
               </div>
 
-              <div className="w-full md:w-5/12 p-2 md:p-4 overflow-y-auto bg-[#fcfcfc] dark:bg-[#202020] mb-20">
-                <div className=" p-4 rounded-lg mb-4">
-                  <div className="flex items-center gap-2">
-                    <h2 className="text-[24px] font-medium leading-tight mb-1 dark:text-white">
-                      {product.Name}
-                    </h2>
-                    <IoInformationCircleOutline className="w-5 h-5 text-gray-400" />
-                  </div>
-                  <p className="text-[#838383] text-[14px] leading-tight mb-2">
-                    {product.Description}
-                  </p>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      {serving && (
-                        <div className="flex items-center bg-[var(--primary-light)] rounded px-2 py-1">
-                          <FiUser className="h-3 w-3 text-[var(--text-primary)]" />
-                          <span className="text-[12px] ml-1 dark:text-white">
-                            x {serving}
-                          </span>
-                        </div>
-                      )}
+              <div className="w-full md:w-6/12 p-2 md:p-4 overflow-y-auto bg-[#fcfcfc] dark:bg-[#202020]">
+                <div className="hidden md:sticky -top-4 z-10 md:flex justify-end bg-[#fcfcfc] dark:bg-[#202020] py-1">
+                  <button
+                    onClick={() => {
+                      resetSelections();
+                      onClose();
+                    }}
+                    className="p-2 rounded-full transition-colors hover:bg-gray-100 dark:hover:bg-[#303030] flex items-center justify-center"
+                    aria-label="Close popup"
+                  >
+                    <IoClose size={24} className="dark:text-white" />
+                  </button>
+                </div>
+                <div className="mt-2">
+                  <div className=" p-4 rounded-lg mb-4">
+                    <div className="flex items-center justify-between gap-2">
+                      <h2 className="text-[19px] font-bold leading-tight mb-1 dark:text-white">
+                        {product.Name}
+                      </h2>
+                      <IoInformationCircleOutline className="w-5 h-5 text-gray-400" />
                     </div>
-                  </div>
-                  {!product.MenuSizesList?.some(
-                    (size) => size.FlavourAndToppingsList?.length > 0
-                  ) && (
-                    <div className="w-full bg-gray-100 dark:bg-[#303030] rounded-full py-1 text-center mt-4">
-                      <span className="text-sm font-medium dark:text-white">
-                        1 pc
-                      </span>
-                    </div>
-                  )}
-                  {product.MenuSizesList?.some(
-                    (size) =>
-                      size.Size !== "-" && size.Size !== "." && size.Size !== ""
-                  ) && (
-                    <div className="flex justify-center mb-4 overflow-x-auto rounded-full w-full">
-                      <div className="relative flex items-center bg-gray-100 dark:bg-[#303030] p-1 w-full rounded-full whitespace-nowrap">
-                        {product.MenuSizesList.map(
-                          (size, idx) =>
-                            size.Size !== "-" &&
-                            size.Size !== "." &&
-                            size.Size !== "" && (
-                              <button
-                                key={idx}
-                                onClick={() => handleSizeSelect(size.Size)}
-                                className={`relative z-10 py-1.5 px-4 text-sm transition-all duration-300 flex-shrink-0 ${
-                                  selectedSize === size.Size
-                                    ? "text-black font-medium"
-                                    : "text-gray-500"
-                                }`}
-                              >
-                                <span className="relative z-10 text-[12px]">
-                                  {size.Size}
-                                </span>
-                                {selectedSize === size.Size && (
-                                  <div className="absolute inset-0 bg-white rounded-full shadow-md transition-all duration-300" />
-                                )}
-                              </button>
-                            )
+                    <p className=" text-[12px] text-[#2f2f2f] leading-tight mb-2">
+                      {product.Description}
+                    </p>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        {serving && (
+                          <div className="flex items-center bg-[var(--primary-light)] rounded px-2 py-1">
+                            <FiUser className="h-3 w-3 text-[var(--text-primary)]" />
+                            <span className="text-[12px] ml-1 dark:text-white">
+                              x {serving}
+                            </span>
+                          </div>
                         )}
                       </div>
                     </div>
-                  )}
+                    {!product.MenuSizesList?.some(
+                      (size) => size.FlavourAndToppingsList?.length > 0
+                    ) && (
+                      <div className="w-full bg-gray-100 dark:bg-[#303030] rounded-full py-1 text-center mt-4">
+                        <span className="text-sm font-medium dark:text-white">
+                          1 pc
+                        </span>
+                      </div>
+                    )}
+                    {product.MenuSizesList?.some(
+                      (size) =>
+                        size.Size !== "-" &&
+                        size.Size !== "." &&
+                        size.Size !== ""
+                    ) && (
+                      <div className="flex justify-center mb-4 overflow-x-auto rounded-full w-full">
+                        <div className="relative flex items-center bg-gray-100 dark:bg-[#303030] p-1 w-full rounded-full whitespace-nowrap">
+                          {product.MenuSizesList.map(
+                            (size, idx) =>
+                              size.Size !== "-" &&
+                              size.Size !== "." &&
+                              size.Size !== "" && (
+                                <button
+                                  key={idx}
+                                  onClick={() => handleSizeSelect(size.Size)}
+                                  className={`relative z-10 py-1.5 px-4 text-sm transition-all duration-300 flex-shrink-0 ${
+                                    selectedSize === size.Size
+                                      ? "text-black font-medium"
+                                      : "text-gray-500"
+                                  }`}
+                                >
+                                  <span className="relative z-10 text-[12px]">
+                                    {size.Size}
+                                  </span>
+                                  {selectedSize === size.Size && (
+                                    <div className="absolute inset-0 bg-white rounded-full shadow-md transition-all duration-300" />
+                                  )}
+                                </button>
+                              )
+                          )}
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 </div>
 
                 {(selectedSize ||
@@ -438,7 +451,7 @@ const ProductPopup: React.FC<IProductProps> = ({
                             key={idx}
                             className="mb-1 px-2 shadow-sm rounded-[10px]"
                           >
-                            <h3 className="text-[20px] font-semibold flex items-center gap-2 p-2 dark:text-white">
+                            <h3 className="text-[16px] font-semibold flex items-center gap-2 p-2 dark:text-white">
                               {topping.Name}
                               {!topping.IsMultiple && (
                                 <span className="text-red-500 text-4xl">*</span>
@@ -490,7 +503,7 @@ const ProductPopup: React.FC<IProductProps> = ({
                               </div>
                             ) : (
                               <div
-                                className="cursor-pointer p-6 bg-white rounded-lg hover:bg-gray-50 dark:hover:bg-[#303030] flex items-center justify-between shadow-md transition-all duration-200 mb-2"
+                                className="cursor-pointer p-2 bg-white rounded-lg hover:bg-gray-50 dark:hover:bg-[#303030] flex items-center justify-between shadow-md transition-all duration-200 mb-2"
                                 onClick={() => setExpandedOption(topping.Name)}
                               >
                                 <div className="flex items-center gap-2">
@@ -508,7 +521,7 @@ const ProductPopup: React.FC<IProductProps> = ({
                                           className="rounded-full shadow-lg h-28 object-cover"
                                         />
                                         <div className="flex flex-col gap-2">
-                                          <span className="dark:text-white text-lg font-bold">
+                                          <span className="dark:text-white text-[15px] font-bold">
                                             {selectedOptions[topping.Name]
                                               ?.length > 0
                                               ? selectedOptions[topping.Name]
@@ -535,7 +548,21 @@ const ProductPopup: React.FC<IProductProps> = ({
                         ))}
                     </div>
                   ))}
-
+                <div className="fixed bottom-0 left-0 right-0 z-[51] bg-[#fcfcfc] dark:bg-[#202020] p-4 border-t md:sticky md:-bottom-4">
+                  <button
+                    onClick={handleAddToCart}
+                    disabled={isAddingToCart}
+                    className="w-full bg-[#FFC714] dark:text-[#000] text-white font-medium py-2 px-6 rounded-full transition-colors shadow-lg text-sm"
+                  >
+                    {isAddingToCart ? (
+                      <div className="flex items-center justify-center gap-2">
+                        <div className="w-5 h-5 border-2 border-black border-t-transparent rounded-full animate-spin" />
+                      </div>
+                    ) : (
+                      `Add to cart for Rs. ${calculateTotal()}`
+                    )}
+                  </button>
+                </div>
                 {/* <div className="flex flex-col gap-2 bg-white dark:bg-[#202020] md:rounded-xl md:shadow-md p-2 dark:text-white">
                 <h3 className="text-[14px] font-bold">Extra Comments:</h3>
 
@@ -596,30 +623,6 @@ const ProductPopup: React.FC<IProductProps> = ({
               </div> */}
               </div>
             </div>
-
-            <button
-              onClick={handleAddToCart}
-              disabled={isAddingToCart}
-              className="fixed bottom-4 left-4 right-4 md:left-auto md:right-8 md:w-4/12 bg-[#FFC714] dark:text-[#000] text-white font-medium py-2 px-6 rounded-full transition-colors shadow-lg z-50 text-sm"
-            >
-              {isAddingToCart ? (
-                <div className="flex items-center justify-center gap-2">
-                  <div className="w-5 h-5 border-2 border-black border-t-transparent rounded-full animate-spin" />
-                </div>
-              ) : (
-                `Add to cart for Rs. ${calculateTotal()}`
-              )}
-            </button>
-
-            <button
-              onClick={() => {
-                resetSelections();
-                onClose();
-              }}
-              className="hidden lg:block absolute top-2 lg:right-[calc((100%-900px)/2-60px)] float-right p-2 rounded-full transition-colors w-12 h-12 z-50 text-white"
-            >
-              <IoClose size={36} />
-            </button>
           </div>
         </div>
       </div>

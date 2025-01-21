@@ -252,7 +252,7 @@ const HeaderPopup = () => {
       }`}
     >
       <div
-        className={`bg-white dark:bg-[#121212] w-full sm:max-w-[800px] h-screen sm:h-[680px] z-60 sm:rounded-md shadow-xl overflow-hidden md:overflow-y-auto  pointer-events-auto ${
+        className={`bg-white dark:bg-[#121212] w-full sm:max-w-[800px] h-screen sm:h-[680px] z-60 sm:rounded-[24px] shadow-xl overflow-hidden md:overflow-y-auto  pointer-events-auto ${
           addressState.modalOpen ? "slide-up" : "slide-down"
         }`}
       >
