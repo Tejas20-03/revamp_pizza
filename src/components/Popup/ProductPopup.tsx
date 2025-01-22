@@ -38,7 +38,7 @@ const ProductPopup: React.FC<IProductProps> = ({
     Record<string, MenuItemOption[]>
   >({});
   const [selectedSize, setSelectedSize] = useState<string>("");
-  const [imageScale, setImageScale] = useState<number>(0.8);
+  const [imageScale, setImageScale] = useState<number>(1);
   const [expandedOption, setExpandedOption] = useState<string | null>(null);
 
   const [isAddingToCart, setIsAddingToCart] = useState<boolean>(false);
@@ -344,8 +344,8 @@ const ProductPopup: React.FC<IProductProps> = ({
                       className="rounded-xl w-full h-full object-cover transition-transform duration-300"
                       style={{
                         objectFit: "contain",
-                        width: "80%",
-                        height: "80%",
+                        width: "100%",
+                        height: "100%",
                         transform: `scale(${imageScale})`,
                       }}
                     />

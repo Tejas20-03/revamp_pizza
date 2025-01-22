@@ -91,11 +91,10 @@ const StoriesCard = () => {
                   alt={story.title}
                   width={72}
                   height={100}
-                  className="w-full h-full object-cover"
+                  className={`w-full h-full object-cover transition-all duration-300 ${
+                    story.visited ? "opacity-60" : ""
+                  }`}
                 />
-                {story.visited && (
-                  <div className="absolute inset-0 bg-gradient-to-b from-gray-500/30 to-gray-700/30 transition-all duration-300" />
-                )}
               </div>
             </div>
           ))}
