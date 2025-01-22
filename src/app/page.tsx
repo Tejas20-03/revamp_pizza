@@ -13,17 +13,22 @@ import Tabs from "@/components/Tabs";
 import GetApp from "@/components/GetApp";
 import { login } from "@/redux/auth/slice";
 import { initializeCartFromStorage } from "@/redux/cart/action";
-import { debounce } from 'lodash';
+import { debounce } from "lodash";
+import StoriesCard from "@/components/StoriesCard";
 
 const MemoizedCards = React.memo(Cards);
 const MemoizedHeroCarousel = React.memo(HeroCarousel);
 const MemoizedTabs = React.memo(Tabs);
+const MemoizedStories = React.memo(StoriesCard);
 
 const SkeletonLoader = React.memo(() => (
   <div className="w-full pb-[10px] mt-4 bg-background px-0 md:px-40">
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2 max-w-[1400px] mx-auto p-4">
       {[...Array(8)].map((_, index) => (
-        <div key={index} className="flex flex-col p-2 rounded-xl shadow-md bg-white">
+        <div
+          key={index}
+          className="flex flex-col p-2 rounded-xl shadow-md bg-white"
+        >
           <div className="w-full h-[180px] bg-gray-200 animate-pulse rounded-xl mb-2" />
           <div className="flex justify-between items-center mb-2">
             <div className="h-6 w-16 bg-gray-200 animate-pulse rounded" />
@@ -40,12 +45,24 @@ const SkeletonLoader = React.memo(() => (
 const SEOHead = () => (
   <Head>
     <title>Order Broadway Pizza Pakistan Online - Best Pizza Deals</title>
-    <meta name="description" content="Broadway Pizza is offering online ordering services in Pakistan. Order now and get amazing discounts and coupons on pizza deals and other fast food." />
-    <meta name="keywords" content="pizza delivery, pakistan pizza, broadway pizza, online pizza ordering" />
+    <meta
+      name="description"
+      content="Broadway Pizza is offering online ordering services in Pakistan. Order now and get amazing discounts and coupons on pizza deals and other fast food."
+    />
+    <meta
+      name="keywords"
+      content="pizza delivery, pakistan pizza, broadway pizza, online pizza ordering"
+    />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="canonical" href="https://broadwaypizza.com.pk" />
-    <meta property="og:title" content="Broadway Pizza Pakistan - Online Ordering" />
-    <meta property="og:description" content="Order pizza online from Broadway Pizza Pakistan" />
+    <meta
+      property="og:title"
+      content="Broadway Pizza Pakistan - Online Ordering"
+    />
+    <meta
+      property="og:description"
+      content="Order pizza online from Broadway Pizza Pakistan"
+    />
   </Head>
 );
 
@@ -54,33 +71,38 @@ const Home = () => {
     tabs: [] as string[],
     isLoading: true,
     menu: [] as MenuCategory[],
-    isMobile: false
+    isMobile: false,
   });
 
   const dispatch = useDispatch<StoreDispatch>();
   const addressState = useSelector((state: StoreState) => state.address);
 
-  const fetchMenuData = useCallback(async (city: string, location: string, addressType: string) => {
-    setPageState(prev => ({ ...prev, isLoading: true }));
-    try {
-      const data = await getMenu(city, location, addressType, {});
-      const categoryNames: string[] = [];
+  const fetchMenuData = useCallback(
+    async (city: string, location: string, addressType: string) => {
+      setPageState((prev) => ({ ...prev, isLoading: true }));
+      try {
+        const data = await getMenu(city, location, addressType, {});
+        const categoryNames: string[] = [];
 
-      data?.Data.NestedMenuForMobile[0]?.MenuCategoryList.forEach((menuCategory: any) => {
-        categoryNames.push(menuCategory.Name);
-      });
+        data?.Data.NestedMenuForMobile[0]?.MenuCategoryList.forEach(
+          (menuCategory: any) => {
+            categoryNames.push(menuCategory.Name);
+          }
+        );
 
-      setPageState(prev => ({
-        ...prev,
-        menu: data?.Data?.NestedMenuForMobile[0]?.MenuCategoryList || [],
-        tabs: categoryNames,
-        isLoading: false
-      }));
-    } catch (error) {
-      console.error("Error fetching menu:", error);
-      setPageState(prev => ({ ...prev, isLoading: false }));
-    }
-  }, []);
+        setPageState((prev) => ({
+          ...prev,
+          menu: data?.Data?.NestedMenuForMobile[0]?.MenuCategoryList || [],
+          tabs: categoryNames,
+          isLoading: false,
+        }));
+      } catch (error) {
+        console.error("Error fetching menu:", error);
+        setPageState((prev) => ({ ...prev, isLoading: false }));
+      }
+    },
+    []
+  );
 
   useEffect(() => {
     const initializeApp = async () => {
@@ -93,16 +115,29 @@ const Home = () => {
       const savedAddress = localStorage.getItem("address");
       if (savedAddress) {
         const parsedAddress = JSON.parse(savedAddress);
-        const navigationEntry = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming;
-        
-        dispatch(addressesActions.setAddresses({
-          ...parsedAddress,
-          modalOpen: window.location.pathname === '/' && navigationEntry.type === 'reload'
-        }));
+        const navigationEntry = performance.getEntriesByType(
+          "navigation"
+        )[0] as PerformanceNavigationTiming;
 
-        const location = parsedAddress.addressType === "Pickup" ? parsedAddress.outlet : parsedAddress.area;
+        dispatch(
+          addressesActions.setAddresses({
+            ...parsedAddress,
+            modalOpen:
+              window.location.pathname === "/" &&
+              navigationEntry.type === "reload",
+          })
+        );
+
+        const location =
+          parsedAddress.addressType === "Pickup"
+            ? parsedAddress.outlet
+            : parsedAddress.area;
         if (parsedAddress.city) {
-          fetchMenuData(parsedAddress.city, location || "", parsedAddress.addressType || "");
+          fetchMenuData(
+            parsedAddress.city,
+            location || "",
+            parsedAddress.addressType || ""
+          );
         }
       } else {
         dispatch(addressesActions.setAddresses({ modalOpen: true }));
@@ -115,7 +150,7 @@ const Home = () => {
 
   useEffect(() => {
     const handleResize = debounce(() => {
-      setPageState(prev => ({ ...prev, isMobile: window.innerWidth < 1024 }));
+      setPageState((prev) => ({ ...prev, isMobile: window.innerWidth < 1024 }));
     }, 250);
 
     handleResize();
@@ -125,18 +160,34 @@ const Home = () => {
 
   useEffect(() => {
     if (addressState.city) {
-      const location = addressState.addressType === "Pickup" ? addressState.outlet : addressState.area;
-      fetchMenuData(addressState.city, location || "", addressState.addressType || "");
+      const location =
+        addressState.addressType === "Pickup"
+          ? addressState.outlet
+          : addressState.area;
+      fetchMenuData(
+        addressState.city,
+        location || "",
+        addressState.addressType || ""
+      );
     }
-  }, [addressState.city, addressState.outlet, addressState.area, addressState.addressType, fetchMenuData]);
+  }, [
+    addressState.city,
+    addressState.outlet,
+    addressState.area,
+    addressState.addressType,
+    fetchMenuData,
+  ]);
 
   return (
     <>
       <SEOHead />
+      <MemoizedStories />
       <MemoizedHeroCarousel />
-      {pageState.tabs.length > 0 && <MemoizedTabs tabs={pageState.tabs} isLoading={pageState.isLoading} />}
+      {pageState.tabs.length > 0 && (
+        <MemoizedTabs tabs={pageState.tabs} isLoading={pageState.isLoading} />
+      )}
       {pageState.isMobile && <GetApp showFullContent={false} />}
-      
+
       {pageState.isLoading ? (
         <SkeletonLoader />
       ) : (

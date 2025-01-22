@@ -19,7 +19,7 @@ const HeroCarousel: React.FC = () => {
 
   useEffect(() => {
     setIsLoading(true);
-    getBanners(addressData.city || "", {}).then((data:any) => {
+    getBanners(addressData.city || "", {}).then((data: any) => {
       if (data) {
         setBannerData(data);
         setIsLoading(false);
@@ -28,7 +28,7 @@ const HeroCarousel: React.FC = () => {
   }, [addressData.city]);
 
   return (
-    <div className="w-full md:w-[100%] relative m-0 px-4 md:px-12">
+    <div className="hidden md:block w-full md:w-[100%] relative m-0 px-4 md:px-12">
       <Swiper
         key="hero-carousel"
         breakpoints={{
@@ -68,8 +68,12 @@ const HeroCarousel: React.FC = () => {
           <div className="w-full h-[200px] sm:h-[250px] md:h-[300px] rounded-lg bg-gray-200 animate-pulse" />
         )}
       </Swiper>
-      <div className={`${styles.swiperButtonPrev} ${styles.swiperButton}`}></div>
-      <div className={`${styles.swiperButtonNext} ${styles.swiperButton}`}></div>
+      <div
+        className={`${styles.swiperButtonPrev} ${styles.swiperButton}`}
+      ></div>
+      <div
+        className={`${styles.swiperButtonNext} ${styles.swiperButton}`}
+      ></div>
     </div>
   );
 };
