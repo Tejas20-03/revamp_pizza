@@ -330,7 +330,7 @@ const ProductPopup: React.FC<IProductProps> = ({
                     ))}
                   </div>
                 ) : (
-                  <div className="w-full h-full relative rounded-xl shadow-sm p-4  flex items-center justify-center">
+                  <div className="w-full h-full relative rounded-xl shadow-sm p-4  flex items-center justify-center z-0">
                     {isNewItem && (
                       <span className="absolute top-6 right-6 z-10 bg-[#1F9226] text-white text-[12px] font-light px-2 py-0.5 rounded animate-bounce">
                         New!
@@ -353,7 +353,7 @@ const ProductPopup: React.FC<IProductProps> = ({
                 )}
               </div>
 
-              <div className="w-full md:w-6/12 p-2 md:p-4 overflow-y-auto bg-[#fcfcfc] dark:bg-[#202020]">
+              <div className="w-full md:w-6/12 p-2 md:p-4 overflow-y-auto bg-[#fcfcfc] dark:bg-[#202020] z-10">
                 <div className="hidden md:sticky -top-4 z-10 md:flex justify-end bg-[#fcfcfc] dark:bg-[#202020] py-1">
                   <button
                     onClick={() => {
@@ -379,7 +379,7 @@ const ProductPopup: React.FC<IProductProps> = ({
                     </p>
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        {serving && (
+                        {serving && serving > 0 && (
                           <div className="flex items-center bg-[var(--primary-light)] rounded px-2 py-1">
                             <FiUser className="h-3 w-3 text-[var(--text-primary)]" />
                             <span className="text-[12px] ml-1 dark:text-white">
@@ -404,31 +404,33 @@ const ProductPopup: React.FC<IProductProps> = ({
                         size.Size !== "." &&
                         size.Size !== ""
                     ) && (
-                      <div className="flex justify-center mb-4 overflow-x-auto rounded-full w-full">
-                        <div className="relative flex items-center bg-gray-100 dark:bg-[#303030] p-1 w-full rounded-full whitespace-nowrap">
-                          {product.MenuSizesList.map(
-                            (size, idx) =>
-                              size.Size !== "-" &&
-                              size.Size !== "." &&
-                              size.Size !== "" && (
-                                <button
-                                  key={idx}
-                                  onClick={() => handleSizeSelect(size.Size)}
-                                  className={`relative z-10 py-1.5 px-4 text-sm transition-all duration-300 flex-shrink-0 ${
-                                    selectedSize === size.Size
-                                      ? "text-black font-medium"
-                                      : "text-gray-500"
-                                  }`}
-                                >
-                                  <span className="relative z-10 text-[12px]">
-                                    {size.Size}
-                                  </span>
-                                  {selectedSize === size.Size && (
-                                    <div className="absolute inset-0 bg-white rounded-full shadow-md transition-all duration-300" />
-                                  )}
-                                </button>
-                              )
-                          )}
+                      <div className="flex justify-center mb-4 w-full">
+                        <div className="relative max-w-full overflow-x-auto no-scrollbar">
+                          <div className="relative flex items-center justify-start bg-gray-100 dark:bg-[#303030] p-1 rounded-full whitespace-nowrap min-w-fit mx-auto">
+                            {product.MenuSizesList.map(
+                              (size, idx) =>
+                                size.Size !== "-" &&
+                                size.Size !== "." &&
+                                size.Size !== "" && (
+                                  <button
+                                    key={idx}
+                                    onClick={() => handleSizeSelect(size.Size)}
+                                    className={`relative z-10 py-1.5 px-4 text-sm transition-all duration-300 flex-shrink-0 ${
+                                      selectedSize === size.Size
+                                        ? "text-black font-medium"
+                                        : "text-gray-500"
+                                    }`}
+                                  >
+                                    <span className="relative z-10 text-[12px]">
+                                      {size.Size}
+                                    </span>
+                                    {selectedSize === size.Size && (
+                                      <div className="absolute inset-0 bg-white rounded-full shadow-md transition-all duration-300" />
+                                    )}
+                                  </button>
+                                )
+                            )}
+                          </div>
                         </div>
                       </div>
                     )}
