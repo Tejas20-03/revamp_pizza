@@ -379,7 +379,7 @@ const ProductPopup: React.FC<IProductProps> = ({
                     </p>
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        {serving && serving > 0 && (
+                        {serving && Number(serving) > 0 && (
                           <div className="flex items-center bg-[var(--primary-light)] rounded px-2 py-1">
                             <FiUser className="h-3 w-3 text-[var(--text-primary)]" />
                             <span className="text-[12px] ml-1 dark:text-white">

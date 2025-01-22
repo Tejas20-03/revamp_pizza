@@ -75,13 +75,11 @@ const OptionSlide = ({
       <div className="flex items-center justify-between gap-4 w-full mt-auto">
         <button
           onClick={() => onSelect(option, topping)}
-          className={`w-full px-2 py-4 rounded-full text-[16px] font-semibold transition-colors ${
-            isSelected
-              ? "bg-[#FFF0E6] text-[#D15700]"
-              : "text-white bg-[#D15700]"
+          className={`w-full px-2 py-4 rounded-full text-[16px] font-bold transition-colors ${
+            isSelected ? "bg-[#fece33] text-black" : "text-black bg-[#ffc714]"
           }`}
         >
-          {isSelected ? "Already in combo" : "Choose"}
+          {isSelected ? "Selected" : "Choose"}
         </button>
       </div>
     </div>

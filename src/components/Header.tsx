@@ -50,6 +50,15 @@ const Header = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [handleScroll]);
 
+  const [windowWidth, setWindowWidth] = useState(0);
+
+  useEffect(() => {
+    setWindowWidth(window.innerWidth);
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   const backgroundStyle = {
     backgroundColor: isDarkMode
       ? scrollPosition > 0
@@ -69,7 +78,7 @@ const Header = () => {
   return (
     <>
       <header
-        className="w-full relative top-0 z-20 h-[60px] sm:h-[70px] lg:h-[70px] mb-1 dark:bg-[#202020]"
+        className="w-full relative top-0 z-20 h-[60px] sm:h-[70px] lg:h-[70px] mb-2 sm:mb-1 dark:bg-[#202020]"
         style={backgroundStyle}
       >
         <nav className="w-full h-full px-3 max-w-8xl mx-auto">
@@ -88,7 +97,9 @@ const Header = () => {
                     alt="Broadway Pizza"
                     width={150}
                     height={40}
-                    className="h-auto w-28"
+                    className="h-auto w-28 sm:w-32" // Increased width for mobile, maintains smaller size on larger screens
+                    priority // Ensures faster loading of logo
+                    quality={100} // Maximum image quality
                   />
                 </Link>
               </>
@@ -125,7 +136,7 @@ const Header = () => {
                 >
                   <div className="flex items-center">
                     <PiNavigationArrowThin className="text-[var(--text-primary)] text-lg rotate-90" />
-                    <span className="text-[13px] text-[var(--text-primary)] block">
+                    <span className="hidden text-[13px] text-[var(--text-primary)] md:block">
                       {address.addressType || "Select"}
                     </span>
                   </div>
@@ -138,7 +149,32 @@ const Header = () => {
                             word.charAt(0).toUpperCase() +
                             word.slice(1).toLowerCase()
                         )
-                        .join(" ")}
+                        .join(" ").length > (windowWidth >= 1024 ? 20 : 12)
+                        ? (
+                            address.area ||
+                            address.outlet ||
+                            "Delivery / Pickup"
+                          )
+                            .split(" ")
+                            .map(
+                              (word) =>
+                                word.charAt(0).toUpperCase() +
+                                word.slice(1).toLowerCase()
+                            )
+                            .join(" ")
+                            .slice(0, windowWidth >= 1024 ? 20 : 12) + "..."
+                        : (
+                            address.area ||
+                            address.outlet ||
+                            "Delivery / Pickup"
+                          )
+                            .split(" ")
+                            .map(
+                              (word) =>
+                                word.charAt(0).toUpperCase() +
+                                word.slice(1).toLowerCase()
+                            )
+                            .join(" ")}
                     </span>
                   </div>
                 </button>

@@ -169,7 +169,7 @@ const Cards: React.FC<Iprops> = ({ data, heading, isLoading }) => {
                         {Number(item.DiscountedPrice) > 0 && (
                           <span
                             className={`text-[14px] font-bold 
-                         dark:text-white md:text-black text-[#D15700] md:bg-transparent bg-[#fff0e6] px-6 py-2 md:p-0 rounded-full md:rounded-none`}
+                         dark:text-white md:text-black text-[#FFC714] md:bg-transparent bg-[#fff0e6] px-6 py-2 md:p-0 rounded-full md:rounded-none`}
                           >
                             Rs.{item.DiscountedPrice}
                           </span>
@@ -182,7 +182,7 @@ const Cards: React.FC<Iprops> = ({ data, heading, isLoading }) => {
                       </div>
                       <button
                         onClick={() => handleAddToCart(item)}
-                        className="hidden md:block px-6 py-1 rounded-full bg-[#fff0e6] text-[#D15700] text-[13px] font-medium hover:opacity-90 transition-opacity"
+                        className="hidden md:block px-6 py-1 rounded-full bg-[#fff0e6] text-[#FFC714] text-[13px] font-medium hover:opacity-90 transition-opacity"
                       >
                         Choose
                       </button>
