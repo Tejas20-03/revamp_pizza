@@ -208,6 +208,24 @@ const ProductPopup: React.FC<IProductProps> = ({
   };
 
   useEffect(() => {
+    if (product) {
+      const toppingsList =
+        product.MenuSizesList?.find((cat) => cat.Size === selectedSize)
+          ?.FlavourAndToppingsList ||
+        product.MenuSizesList[0].FlavourAndToppingsList;
+
+      toppingsList.forEach((category) => {
+        if (!category.IsMultiple && category.OptionsList?.length > 0) {
+          setSelectedOptions((prev) => ({
+            ...prev,
+            [category.Name]: [category.OptionsList[0]],
+          }));
+        }
+      });
+    }
+  }, [product, selectedSize]);
+
+  useEffect(() => {
     if (isOpen) {
       const scrollPosition = window.scrollY;
       document.body.dataset.scrollPosition = scrollPosition.toString();
@@ -300,10 +318,11 @@ const ProductPopup: React.FC<IProductProps> = ({
                           if (currentTopping) {
                             handleOptionSelect(option, currentTopping);
                           }
+                          setExpandedOption(null);
                         }}
-                        className={`cursor-pointer p-2 rounded-xl transition-all duration-200 
+                        className={`cursor-pointer p-1 rounded-xl transition-all duration-200 
               bg-white dark:bg-[#202020] hover:bg-gray-50 dark:hover:bg-[#303030]
-              flex flex-col items-center relative
+              flex flex-col items-center relative h-fit
               ${
                 isOptionSelected(option, expandedOption)
                   ? "border-2 border-[#FFC714]"
@@ -520,7 +539,7 @@ const ProductPopup: React.FC<IProductProps> = ({
                                           width={100}
                                           height={100}
                                           alt={topping.OptionsList[0].Name}
-                                          className="rounded-full shadow-lg h-28 object-cover"
+                                          className="rounded-full shadow-lg h-auto object-cover"
                                         />
                                         <div className="flex flex-col gap-2">
                                           <span className="dark:text-white text-[15px] font-bold">

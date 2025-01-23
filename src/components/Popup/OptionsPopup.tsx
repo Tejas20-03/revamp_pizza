@@ -8,7 +8,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
-import { useEffect, useCallback, memo, useState } from "react";
+import { useEffect, useCallback, memo, useState, useRef } from "react";
 
 interface OptionType {
   ID: number;
@@ -120,6 +120,14 @@ function OptionsPopup({
 
   if (!topping?.OptionsList?.length) return null;
 
+  // Function to handle backdrop click
+  const handleBackdropClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    const backdrop = event.currentTarget;
+    if (event.target === backdrop) {
+      onClose(); // Close the popup
+    }
+  };
+
   return (
     <div className="w-full h-full fixed inset-0 z-[60]">
       <div className="absolute inset-0 bg-black/60 backdrop-blur-lg">
@@ -129,8 +137,11 @@ function OptionsPopup({
         >
           <IoClose size={32} className="text-white" />
         </button>
-        <div className="flex items-center justify-center h-full">
-          <div className="w-full max-w-[100vw] md:max-w-[80vw] h-[60vh] relative ">
+        <div
+          className="flex items-center justify-center h-full"
+          onClick={handleBackdropClick}
+        >
+          <div className="w-full max-w-[100vw] md:max-w-[80vw] h-[60vh] relative">
             <div className="absolute -top-8 left-0 right-0 z-10 flex justify-center">
               <div className="text-white text-lg font-medium">
                 {currentSlide} / {topping.OptionsList.length}
