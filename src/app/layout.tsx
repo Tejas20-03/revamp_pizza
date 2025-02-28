@@ -10,12 +10,19 @@ import { ThemeProvider } from "./ThemeContext";
 import SuccessToast from "@/components/UI/SuccessToast";
 import LoadingSpinner from "@/components/UI/LoadingSpinner";
 import ProgressLoader from "@/components/UI/ProgressLoader";
+import localFont from "next/font/local";
 
 const manrope = Manrope({
   subsets: ["latin"],
   display: "swap",
   weight: ["200", "300", "400", "500", "600", "700", "800"],
   variable: "--font-manrope",
+});
+
+const dodo = localFont({
+  src: "../fonts/Dodo.ttf",
+  variable: "--font-dodo",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -39,7 +46,7 @@ export default function RootLayout({
         <html lang="en" suppressHydrationWarning>
           <ThemeProvider>
             <body
-              className={`${manrope.variable} antialiased`}
+              className={`${dodo.variable} antialiased`}
               suppressHydrationWarning
             >
               <SideNav />
