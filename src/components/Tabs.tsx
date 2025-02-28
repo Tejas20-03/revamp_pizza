@@ -35,15 +35,17 @@ const Tabs: React.FC<TabsProps> = ({ tabs, isLoading }) => {
 
   const backgroundStyle = {
     backgroundColor: isDarkMode
-      ? scrollPosition > 0
+      ? scrollPosition > 30
         ? `rgba(32, 32, 32, ${Math.min(scrollPosition / 200, 0.9)})`
         : "rgba(32, 32, 32, 0.7)"
-      : scrollPosition > 0
+      : scrollPosition > 30
       ? `rgba(255, 255, 255, ${Math.min(scrollPosition / 200, 0.9)})`
       : "transparent",
-    backdropFilter: scrollPosition > 0 ? "blur(4px)" : "none",
+    backdropFilter: scrollPosition > 30 ? "blur(4px)" : "none",
+    boxShadow: scrollPosition > 30 ? "0px 4px 30px rgba(6, 5, 50, 0.1)" : "none",
     transition: "all 0.3s ease",
   };
+  
 
   const handleTabClick = useCallback((item: string) => {
     const section = document.getElementById(item);

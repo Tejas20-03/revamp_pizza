@@ -70,6 +70,18 @@ const ProductPopup: React.FC<IProductProps> = ({
   };
 
   useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [isOpen]);
+
+  useEffect(() => {
     if (product && product?.MenuSizesList?.length > 0) {
       const defaultSize = product.MenuSizesList.find(
         (size) => size.Size !== "-" && size.Size !== "." && size.Size !== ""
@@ -225,51 +237,30 @@ const ProductPopup: React.FC<IProductProps> = ({
     }
   }, [product, selectedSize]);
 
-  useEffect(() => {
-    if (isOpen) {
-      const scrollPosition = window.scrollY;
-      document.body.dataset.scrollPosition = scrollPosition.toString();
-      document.body.style.overflow = "hidden";
-      document.body.style.position = "fixed";
-      document.body.style.top = `-${scrollPosition}px`;
-      document.body.style.width = "100%";
-    } else {
-      const scrollPosition = parseInt(
-        document.body.dataset.scrollPosition || "0"
-      );
-      document.body.style.removeProperty("overflow");
-      document.body.style.removeProperty("position");
-      document.body.style.removeProperty("top");
-      document.body.style.removeProperty("width");
-      requestAnimationFrame(() => {
-        window.scrollTo({
-          top: scrollPosition,
-          behavior: "instant",
-        });
-      });
-    }
-
-    return () => {
-      document.body.style.removeProperty("overflow");
-      document.body.style.removeProperty("position");
-      document.body.style.removeProperty("top");
-      document.body.style.removeProperty("width");
-      const scrollPosition = parseInt(
-        document.body.dataset.scrollPosition || "0"
-      );
-      window.scrollTo({
-        top: scrollPosition,
-        behavior: "instant",
-      });
-    };
-  }, [isOpen]);
-
   if (!product) return;
 
   return (
     <>
-      <div className="fixed inset-0 z-50  bg-black/80 transition-opacity duration-200 overflow-y-auto">
-        <div className="flex items-center justify-center min-h-screen p-2 sm:p-4 overflow-hidden">
+      <div className="fixed inset-0 z-50  bg-black/60 transition-opacity duration-200 overflow-hidden">
+        <div className="flex items-center justify-center min-h-screen p-2 sm:p-4">
+          <div
+            className="hidden md:block absolute z-[52]"
+            style={{
+              right: "15rem",
+              top: "4rem",
+            }}
+          >
+            <button
+              onClick={() => {
+                resetSelections();
+                onClose();
+              }}
+              className="p-2 bg-white dark:bg-[#303030] rounded-full transition-colors hover:bg-gray-100 dark:hover:bg-[#404040] flex items-center justify-center shadow-lg"
+              aria-label="Close popup"
+            >
+              <IoClose size={24} className="dark:text-white" />
+            </button>
+          </div>
           <div
             className={`w-full sm:max-w-[900px] h-full sm:min-h-0 sm:h-[85vh] z-60 sm:rounded-3xl  bg-white dark:bg-[#121212]  ${
               isOpen ? "slide-up" : "slide-down"
@@ -289,7 +280,7 @@ const ProductPopup: React.FC<IProductProps> = ({
               </div>
             </div>
             <div className="h-full flex flex-col md:flex-row relative">
-              <div className="w-full md:w-6/12 p-2 md:p-4">
+              <div className="w-full md:w-7/12 p-2 md:p-4">
                 {expandedOption && !isMobile() ? (
                   <div className="grid grid-cols-3 gap-4 h-full overflow-y-auto p-4">
                     {(
@@ -372,28 +363,16 @@ const ProductPopup: React.FC<IProductProps> = ({
                 )}
               </div>
 
-              <div className="w-full md:w-6/12 p-2 md:p-4 overflow-y-auto bg-[#fcfcfc] dark:bg-[#202020] z-10">
-                <div className="hidden md:sticky -top-4 z-10 md:flex justify-end bg-[#fcfcfc] dark:bg-[#202020] py-1">
-                  <button
-                    onClick={() => {
-                      resetSelections();
-                      onClose();
-                    }}
-                    className="p-2 rounded-full transition-colors hover:bg-gray-100 dark:hover:bg-[#303030] flex items-center justify-center"
-                    aria-label="Close popup"
-                  >
-                    <IoClose size={24} className="dark:text-white" />
-                  </button>
-                </div>
+              <div className="w-full md:w-5/12 p-2 md:p-4 overflow-y-auto bg-[#fcfcfc] dark:bg-[#202020] z-10">
                 <div className="mt-2">
                   <div className=" p-4 rounded-lg mb-4">
                     <div className="flex items-center justify-between gap-2">
-                      <h2 className="text-[19px] font-bold leading-tight mb-1 dark:text-white">
+                      <h2 className="text-[24px] font-medium leading-tight mb-1 dark:text-white">
                         {product.Name}
                       </h2>
                       <IoInformationCircleOutline className="w-5 h-5 text-gray-400" />
                     </div>
-                    <p className=" text-[12px] text-[#2f2f2f] leading-tight mb-2">
+                    <p className=" text-[14px] text-[#2f2f2f] leading-tight mb-2">
                       {product.Description}
                     </p>
                     <div className="flex items-center justify-between">
@@ -569,7 +548,7 @@ const ProductPopup: React.FC<IProductProps> = ({
                         ))}
                     </div>
                   ))}
-                <div className="fixed bottom-0 left-0 right-0 z-[51] bg-[#fcfcfc] dark:bg-[#202020] p-4 border-t md:sticky md:-bottom-4">
+                <div className="fixed bottom-0 left-0 right-0 z-[51] bg-[#fcfcfc] dark:bg-[#202020] p-4 md:sticky md:-bottom-4">
                   <button
                     onClick={handleAddToCart}
                     disabled={isAddingToCart}

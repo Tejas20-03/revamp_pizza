@@ -38,68 +38,22 @@ const Cards: React.FC<Iprops> = ({ data, heading, isLoading }) => {
       dispatch(addressesActions.setAddresses({ modalOpen: true }));
       return;
     }
-    dispatch(setLoading(true));
-
-    // if (product) {
-    //   getOptions(product.ID, {}).then((res) => {
-    //     if (
-    //       res?.Data.MenuSizesList[0].FlavourAndToppingsList &&
-    //       res?.Data.MenuSizesList[0].FlavourAndToppingsList.length <= 0
-    //     ) {
-    //       const cartItem = {
-    //         options: [],
-    //         Price: res?.Data.MenuSizesList[0].DiscountedPrice,
-    //         Quantity: 1,
-    //         ProductName: res?.Data.Name,
-    //         ItemID: res.Data.MenuSizesList[0].MenuItemID,
-    //         CategoryName: res.Data.CategoryName,
-    //         MinimumDelivery: res.Data.MenuSizesList[0].MinDeliveryPrice,
-    //         SizeID: res.Data.MenuSizesList[0].ID,
-    //         TotalProductPrice: res.Data.MenuSizesList[0].DiscountedPrice,
-    //         discountGiven:
-    //           res?.Data.MenuSizesList[0].ActualPrice -
-    //           res?.Data.MenuSizesList[0].DiscountedPrice,
-    //         ID: res.Data.ID,
-    //         ItemImage: res.Data.ItemImage,
-    //         PaymentType: res.Data.PaymentType,
-    //       };
-
-    //       dispatch(addToCart({ products: cartItem }));
-
-    //       // Store in localStorage
-    //       const existingCart = JSON.parse(localStorage.getItem("cart") || "[]");
-    //       existingCart.push(cartItem);
-    //       localStorage.setItem("cart", JSON.stringify(existingCart));
-    //       dispatch(
-    //         openToaster({
-    //           showSuccess: true,
-    //           message: "Added to cart",
-    //           title: "Success",
-    //         })
-    //       );
-    //       dispatch(setLoading(false));
-    //     } else {
-    //       setProductData(res?.Data || null);
-    //       setOpen(true);
-    //       dispatch(setLoading(false));
-    //     }
-    //   });
-    // }
+    // dispatch(setLoading(true));
     if (product) {
       getOptions(product.ID, {}).then((res) => {
         setProductData(res?.Data || null);
         setOpen(true);
-        dispatch(setLoading(false));
+        // dispatch(setLoading(false));
       });
     }
   };
 
   return (
-    <div className="w-full pb-[10px] bg-background px-0 md:px-28">
+    <div className="w-full pb-[10px] bg-background px-0 md:px-28 relative">
       <div className="xs:pl-[5px] pb-[10px] lg:pr-0 xs:pr-[5px]">
         <h2
           id={heading}
-          className="text-[19px] text-manrope md:text-[22px] text-[#2A2a2a] dark:text-white font-bold my-4 mx-4 border-t-2 dark:border-[#202020] pt-2"
+          className="text-[19px] md:text-[32px] text-[#2A2a2a] dark:text-white font-semibold my-8 mx-4 pt-2"
         >
           {heading}
         </h2>
@@ -128,13 +82,13 @@ const Cards: React.FC<Iprops> = ({ data, heading, isLoading }) => {
                     alt={item.Name}
                     width={300}
                     height={300}
-                    className="w-full h-full rounded-2xl object-contain"
+                    className="w-full h-full rounded-lg object-contain"
                     quality={100}
                   />
                 </div>
                 <div className="flex flex-col flex-1 px-1 mb-2 justify-start">
                   <div className="flex justify-between items-center gap-1">
-                    <h3 className="text-[15px] font-bold py-1 flex-1 leading-tight dark:text-white">
+                    <h3 className="text-[20px] font-medium py-1 flex-1 leading-tight dark:text-white">
                       {item.Name}
                     </h3>
                     <div className="h-8 w-8 rounded-full bg-[#FFC714] hidden items-center cursor-pointer justify-center shadow-[0px_10px_15px_rgba(236,99,0,0.44)]">
@@ -149,7 +103,7 @@ const Cards: React.FC<Iprops> = ({ data, heading, isLoading }) => {
 
                   {item.Description && (
                     <div
-                      className="text-[12px] text-gray-800 text-left md:text-justify mt-1"
+                      className="text-[14px] text-[#5C6370] text-left md:text-justify mt-1 font-normal"
                       dangerouslySetInnerHTML={{ __html: item.Description }}
                     />
                   )}
@@ -168,21 +122,21 @@ const Cards: React.FC<Iprops> = ({ data, heading, isLoading }) => {
                       <div className="flex items-center flex-row gap-2">
                         {Number(item.DiscountedPrice) > 0 && (
                           <span
-                            className={`text-[14px] font-bold 
+                            className={`text-[16px] md:text-[20px] font-medium 
                          dark:text-white md:text-black text-[#FFC714] md:bg-transparent bg-[#fff0e6] px-6 py-2 md:p-0 rounded-full md:rounded-none`}
                           >
-                            Rs.{item.DiscountedPrice}
+                            from Rs.{item.DiscountedPrice}
                           </span>
                         )}
-                        {Number(item.MinDeliveryPrice || 0) > 0 && (
+                        {/* {Number(item.MinDeliveryPrice || 0) > 0 && (
                           <span className="hidden md:block text-[10px] font-normal relative after:absolute after:w-[120%] after:h-[2px] after:bg-red-400 after:block after:left-[-2px] after:top-[50%] after:rotate-[-10deg] after:origin-center">
                             Rs.{item.MinDeliveryPrice}
                           </span>
-                        )}
+                        )} */}
                       </div>
                       <button
                         onClick={() => handleAddToCart(item)}
-                        className="hidden md:block px-6 py-1 rounded-full bg-[#fff0e6] text-[#FFC714] text-[13px] font-medium hover:opacity-90 transition-opacity"
+                        className="hidden md:block px-6 py-2 rounded-full text-white bg-[#FFC714] text-[16px] font-medium hover:opacity-90 transition-opacity"
                       >
                         Choose
                       </button>
