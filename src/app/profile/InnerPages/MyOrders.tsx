@@ -83,7 +83,7 @@ const MyOrders: React.FC = () => {
       localStorage.setItem("cart", JSON.stringify(existingCart));
     });
 
-    router.push("/cart");
+    router.push("/");
     setShowOrderDetails(false);
   };
 

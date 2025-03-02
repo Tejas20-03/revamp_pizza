@@ -53,13 +53,13 @@ const Cards: React.FC<Iprops> = ({ data, heading, isLoading }) => {
       <div className="xs:pl-[5px] pb-[10px] lg:pr-0 xs:pr-[5px]">
         <h2
           id={heading}
-          className="text-[19px] md:text-[32px] text-[#2A2a2a] dark:text-white font-semibold my-8 mx-4 pt-2"
+          className="text-[24px] md:text-[32px] text-[#2A2a2a] dark:text-white font-semibold my-2 md:my-8 mx-4 pt-2"
         >
           {heading}
         </h2>
 
         <div className="mx-2">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2 max-w-[1400px] mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2 max-w-[1300px] mx-auto">
             {data?.map((item, index) => (
               <div
                 key={index}
@@ -88,7 +88,7 @@ const Cards: React.FC<Iprops> = ({ data, heading, isLoading }) => {
                 </div>
                 <div className="flex flex-col flex-1 px-1 mb-2 justify-start">
                   <div className="flex justify-between items-center gap-1">
-                    <h3 className="text-[20px] font-medium py-1 flex-1 leading-tight dark:text-white">
+                    <h3 className="text-[18px] md:text-[20px] font-medium py-1 flex-1 leading-tight dark:text-white">
                       {item.Name}
                     </h3>
                     <div className="h-8 w-8 rounded-full bg-[#FFC714] hidden items-center cursor-pointer justify-center shadow-[0px_10px_15px_rgba(236,99,0,0.44)]">
@@ -103,7 +103,7 @@ const Cards: React.FC<Iprops> = ({ data, heading, isLoading }) => {
 
                   {item.Description && (
                     <div
-                      className="text-[14px] text-[#5C6370] text-left md:text-justify mt-1 font-normal"
+                      className="text-[12px] md:text-[14px] text-[#5C6370] text-left md:text-justify mt-1 font-normal"
                       dangerouslySetInnerHTML={{ __html: item.Description }}
                     />
                   )}
@@ -122,8 +122,8 @@ const Cards: React.FC<Iprops> = ({ data, heading, isLoading }) => {
                       <div className="flex items-center flex-row gap-2">
                         {Number(item.DiscountedPrice) > 0 && (
                           <span
-                            className={`text-[16px] md:text-[20px] font-medium 
-                         dark:text-white md:text-black text-[#FFC714] md:bg-transparent bg-[#fff0e6] px-6 py-2 md:p-0 rounded-full md:rounded-none`}
+                            className={`text-[14px] md:text-[20px] font-medium 
+                         dark:text-white md:text-black text-[#FFC714] md:bg-transparent bg-[#fff0e6] px-4 py-2 md:p-0 rounded-full md:rounded-none`}
                           >
                             from Rs.{item.DiscountedPrice}
                           </span>

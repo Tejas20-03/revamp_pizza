@@ -81,7 +81,7 @@ const Header = () => {
         className="w-full relative top-0 z-20 h-[60px] sm:h-[70px] lg:h-[70px] mb-2 sm:mb-1 dark:bg-[#202020]"
         style={backgroundStyle}
       >
-        <nav className="w-full h-full px-3 max-w-8xl mx-auto">
+        <nav className="w-full h-full px-3 max-w-[1300px] mx-auto">
           <div className="flex items-center justify-between h-full relative">
             {isThankYouPage ? (
               <>

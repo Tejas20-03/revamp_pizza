@@ -9,6 +9,7 @@ interface ToasterState {
   isLoading?: boolean;
   progressLoader?: boolean;
   progressMessage?: string;
+  isCartOpen?: boolean;
 }
 
 const initialState: ToasterState = {
@@ -20,6 +21,7 @@ const initialState: ToasterState = {
   isLoading: false,
   progressLoader: false,
   progressMessage: "",
+  isCartOpen: false,
 };
 
 export const toasterSlice = createSlice({
@@ -51,6 +53,9 @@ export const toasterSlice = createSlice({
       state.progressLoader = false;
       state.progressMessage = "";
     },
+    toggleCart: (state, action: PayloadAction<boolean>) => {
+      state.isCartOpen = action.payload;
+    },
   },
 });
 
@@ -60,5 +65,6 @@ export const {
   setLoading,
   showProgressLoader,
   hideProgressLoader,
+  toggleCart
 } = toasterSlice.actions;
 export default toasterSlice.reducer;

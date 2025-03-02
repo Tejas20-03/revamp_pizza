@@ -11,6 +11,8 @@ import SuccessToast from "@/components/UI/SuccessToast";
 import LoadingSpinner from "@/components/UI/LoadingSpinner";
 import ProgressLoader from "@/components/UI/ProgressLoader";
 import localFont from "next/font/local";
+import TopHeader from "@/components/TopHeader";
+import SlideCart from "@/components/SlideCart";
 
 const manrope = Manrope({
   subsets: ["latin"],
@@ -51,11 +53,13 @@ export default function RootLayout({
             >
               <SideNav />
               <main className="main-content">
+                <TopHeader />
                 <Header />
                 <Toaster />
                 <SuccessToast />
                 <LoadingSpinner />
                 <ProgressLoader />
+                <SlideCart/>
                 {children}
                 <GetApp isFooter={true} />
               </main>

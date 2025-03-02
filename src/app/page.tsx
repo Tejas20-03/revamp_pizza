@@ -181,11 +181,11 @@ const Home = () => {
   return (
     <>
       <SEOHead />
-      <MemoizedStories />
-      <MemoizedHeroCarousel />
+      {/* <MemoizedHeroCarousel /> */}
       {pageState.tabs.length > 0 && (
         <MemoizedTabs tabs={pageState.tabs} isLoading={pageState.isLoading} />
       )}
+      <MemoizedStories />
       {pageState.isMobile && <GetApp showFullContent={false} />}
 
       {pageState.isLoading ? (

@@ -242,7 +242,7 @@ const ProductPopup: React.FC<IProductProps> = ({
   return (
     <>
       <div className="fixed inset-0 z-50  bg-black/60 transition-opacity duration-200 overflow-hidden">
-        <div className="flex items-center justify-center min-h-screen p-2 sm:p-4">
+        <div className="flex items-center justify-center min-h-screen sm:p-4">
           <div
             className="hidden md:block absolute z-[52]"
             style={{
@@ -531,7 +531,7 @@ const ProductPopup: React.FC<IProductProps> = ({
                                           </span>
                                           <button
                                             onClick={(e) => {
-                                              e.stopPropagation(); // Prevent parent div click
+                                              e.stopPropagation();
                                               setExpandedOption(topping.Name);
                                             }}
                                             className="bg-[#FFC714] text-black px-3 py-1 rounded-full text-xs font-medium hover:bg-[#e5b313] transition-colors w-20"

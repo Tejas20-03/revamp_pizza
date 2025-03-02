@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { IoClose } from "react-icons/io5";
+import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 
 interface StoriesViewerProps {
   stories: any[];
@@ -78,43 +79,80 @@ const StoriesViewer = ({
   };
 
   return (
-    <div className="fixed inset-0 bg-black z-50 flex items-center justify-center">
-      <button
-        onClick={onClose}
-        className="absolute top-4 right-4 z-50 text-white"
-      >
-        <IoClose size={24} />
-      </button>
+    <div className="fixed inset-0 z-50 flex items-center justify-center">
+      <div
+        className="absolute inset-0 bg-black/70 backdrop-blur-sm"
+        style={{
+          backgroundImage: `url(${currentImage.image})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          filter: "blur(20px) brightness(0.3)",
+        }}
+      />
 
-      <div className="w-full h-full relative" onTouchStart={handleTouchStart}>
-        <div className="absolute top-0 left-0 right-0 z-20 p-2 flex gap-1">
-          {currentStory.stories.map((_: any, index: number) => (
-            <div
-              key={index}
-              className="h-1 flex-1 bg-white/30 rounded-full overflow-hidden"
-            >
+      <div className="relative md:w-[400px] md:h-[600px] w-full h-full bg-black rounded-xl overflow-hidden z-10">
+        {currentStoryIndex > 0 && (
+          <button
+            onClick={() => {
+              setCurrentStoryIndex((prev) => prev - 1);
+              setCurrentImageIndex(0);
+              setProgress(0);
+            }}
+            className="absolute left-4 top-1/2 -translate-y-1/2 z-20 text-[#FFC714] font-bold"
+          >
+            <IoIosArrowBack size={40} />
+          </button>
+        )}
+
+        {currentStoryIndex < stories.length - 1 && (
+          <button
+            onClick={() => {
+              setCurrentStoryIndex((prev) => prev + 1);
+              setCurrentImageIndex(0);
+              setProgress(0);
+            }}
+            className="absolute right-4 top-1/2 -translate-y-1/2 z-20 text-[#FFC714] font-bold"
+          >
+            <IoIosArrowForward size={40} />
+          </button>
+        )}
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 z-50 text-white"
+        >
+          <IoClose size={24} />
+        </button>
+
+        <div className="w-full h-full relative" onTouchStart={handleTouchStart}>
+          <div className="absolute top-0 left-0 right-0 z-20 p-2 flex gap-1">
+            {currentStory.stories.map((_: any, index: number) => (
               <div
-                className="h-full bg-white transition-all duration-100"
-                style={{
-                  width: `${
-                    index === currentImageIndex
-                      ? progress
-                      : index < currentImageIndex
-                      ? "100"
-                      : "0"
-                  }%`,
-                }}
-              />
-            </div>
-          ))}
-        </div>
+                key={index}
+                className="h-1 flex-1 bg-white/30 rounded-full overflow-hidden"
+              >
+                <div
+                  className="h-full bg-white transition-all duration-100"
+                  style={{
+                    width: `${
+                      index === currentImageIndex
+                        ? progress
+                        : index < currentImageIndex
+                        ? "100"
+                        : "0"
+                    }%`,
+                  }}
+                />
+              </div>
+            ))}
+          </div>
 
-        <Image
-          src={currentImage.image}
-          alt={currentStory.title}
-          fill
-          className="object-contain"
-        />
+          <Image
+            src={currentImage.image}
+            alt={currentStory.title}
+            fill
+            className="object-contain"
+          />
+        </div>
       </div>
     </div>
   );

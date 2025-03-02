@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useSelector } from "react-redux";
-import { StoreState } from "@/redux/reduxStore";
+import { useDispatch, useSelector } from "react-redux";
+import { StoreDispatch, StoreState } from "@/redux/reduxStore";
 import { MdOutlinePushPin } from "react-icons/md";
 import { HiOutlineDocumentText } from "react-icons/hi2";
 import {
@@ -12,6 +12,9 @@ import {
   AiOutlineShoppingCart,
   AiOutlineUser,
 } from "react-icons/ai";
+import { useState } from "react";
+import SlideCart from "../SlideCart";
+import { toggleCart } from "@/redux/toaster/slice";
 
 const ICON_SIZE = 22;
 
@@ -20,11 +23,12 @@ const NavItem = ({ href, icon: Icon, title, isActive, onClick }: any) => {
   return (
     <div className="group relative" onClick={onClick}>
       <Link
-        href={title === "Bar" ? "#" : href}
+        href={title === "Bar" || title === "Cart" ? "#" : href}
         className="flex flex-col items-center justify-center cursor-pointer"
         onClick={(e) => {
-          if (title === "Bar") {
+          if (title === "Bar" || title === "Cart") {
             e.preventDefault();
+            onClick && onClick();
           }
         }}
       >
@@ -67,14 +71,23 @@ interface MobileNavProps {
 }
 
 const MobileNav: React.FC<MobileNavProps> = ({ toggleMenu }) => {
+  const dispatch = useDispatch<StoreDispatch>();
   const pathname = usePathname();
   const { userData } = useSelector((state: StoreState) => state.auth);
+
 
   const navItems = [
     { href: "/", icon: AiOutlineMenu, title: "Bar" },
     { href: "/", icon: AiOutlineHome, title: "Order" },
     { href: "/menu", icon: HiOutlineDocumentText, title: "Menu" },
-    { href: "/cart", icon: AiOutlineShoppingCart, title: "Cart" },
+    {
+      href: "#",
+      icon: AiOutlineShoppingCart,
+      title: "Cart",
+      onClick: () => {
+        dispatch(toggleCart(true));
+      }
+    },
     { href: "/location", icon: MdOutlinePushPin, title: "Locations" },
     {
       href: "/profile",
@@ -92,7 +105,7 @@ const MobileNav: React.FC<MobileNavProps> = ({ toggleMenu }) => {
               key={item.title}
               {...item}
               isActive={pathname === item.href}
-              onClick={item.title === "Bar" ? toggleMenu : undefined}
+              onClick={item.title === "Bar" ? toggleMenu : item.onClick}
             />
           ))}
         </div>

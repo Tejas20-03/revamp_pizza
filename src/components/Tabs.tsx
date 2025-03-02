@@ -1,11 +1,9 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
-import { debounce } from "lodash";
 import { useTheme } from "@/app/ThemeContext";
-import Link from "next/link";
-import { useSelector } from "react-redux";
-import { StoreState } from "@/redux/reduxStore";
-import { IoIosArrowForward } from "react-icons/io";
+import { useDispatch, useSelector } from "react-redux";
+import { StoreDispatch, StoreState } from "@/redux/reduxStore";
 import { BsArrowRightShort } from "react-icons/bs";
+import { toggleCart } from "@/redux/toaster/slice";
 
 type TabsProps = {
   tabs: string[];
@@ -14,12 +12,12 @@ type TabsProps = {
 
 const Tabs: React.FC<TabsProps> = ({ tabs, isLoading }) => {
   const { isDarkMode } = useTheme();
-
   const [activeTab, setActiveTab] = useState<string>(tabs[0] || "");
   const [scrollPosition, setScrollPosition] = useState(0);
   const tabRefs = useRef<Record<string, HTMLButtonElement>>({});
   const observer = useRef<IntersectionObserver | null>(null);
   const cartData = useSelector((state: StoreState) => state.cart);
+  const dispatch = useDispatch<StoreDispatch>();
 
   const handleScroll = useCallback(() => {
     const position = window.scrollY;
@@ -42,10 +40,10 @@ const Tabs: React.FC<TabsProps> = ({ tabs, isLoading }) => {
       ? `rgba(255, 255, 255, ${Math.min(scrollPosition / 200, 0.9)})`
       : "transparent",
     backdropFilter: scrollPosition > 30 ? "blur(4px)" : "none",
-    boxShadow: scrollPosition > 30 ? "0px 4px 30px rgba(6, 5, 50, 0.1)" : "none",
+    boxShadow:
+      scrollPosition > 30 ? "0px 4px 30px rgba(6, 5, 50, 0.1)" : "none",
     transition: "all 0.3s ease",
   };
-  
 
   const handleTabClick = useCallback((item: string) => {
     const section = document.getElementById(item);
@@ -111,10 +109,13 @@ const Tabs: React.FC<TabsProps> = ({ tabs, isLoading }) => {
   if (isLoading) return null;
 
   return (
-    <div className="sticky top-[0px] p-0 z-20 w-full" style={backgroundStyle}>
+    <div
+      className="sticky top-[0px] p-2 md:p-0 z-20 w-full"
+      style={backgroundStyle}
+    >
       <div className="max-w-[1300px] mx-auto flex justify-between items-center">
-        <div className="w-[80%] overflow-x-auto no-scrollbar">
-          <div className="flex gap-0 py-2">
+        <div className="w-full md:w-[80%] overflow-x-auto no-scrollbar">
+          <div className="flex gap-1 md:py-2">
             {tabs.map((item) => (
               <button
                 key={item}
@@ -122,12 +123,12 @@ const Tabs: React.FC<TabsProps> = ({ tabs, isLoading }) => {
                   if (el) tabRefs.current[item] = el;
                 }}
                 onClick={() => handleTabClick(item)}
-                className={`text-nowrap px-[10px] py-[16px] text-[14px] font-semibold leading-[1]
-                transition-all duration-300 whitespace-nowrap 
-                hover:text-[#FFC714] ${
+                className={`text-nowrap px-[10px] py-[12px] md:py-[16px] text-[14px] font-semibold leading-[1]
+                transition-all duration-300 whitespace-nowrap rounded-full md:bg-transparent
+                md:hover:text-[#FFC714]     ${
                   activeTab === item
-                    ? "text-[#FFC714]"
-                    : "text-black dark:text-gray-300"
+                    ? "bg-[#FFF5D6] text-[#E5B30D] md:bg-transparent md:text-[#FFC714]"
+                    : "bg-[#F5F5F5] text-black dark:text-gray-300 md:bg-transparent"
                 }`}
               >
                 {item}
@@ -135,8 +136,11 @@ const Tabs: React.FC<TabsProps> = ({ tabs, isLoading }) => {
             ))}
           </div>
         </div>
-        <Link href="/cart" className="w-[20%] flex justify-end px-4">
-          <button className="bg-[#FFC714] text-white rounded-full px-6 py-2 flex items-center gap-2 group">
+        <div className="hidden md:w-[20%] md:flex justify-end px-4">
+          <button
+            onClick={() => dispatch(toggleCart(true))}
+            className="bg-[#FFC714] text-white rounded-full px-6 py-2 flex items-center gap-2 group"
+          >
             <span className="text-[16px] leading-[24px] flex items-center">
               Basket
               {cartData.cartProducts.length > 0 && (
@@ -155,7 +159,7 @@ const Tabs: React.FC<TabsProps> = ({ tabs, isLoading }) => {
               )}
             </span>
           </button>
-        </Link>
+        </div>
       </div>
     </div>
   );

@@ -186,7 +186,7 @@ function PlaceOrder() {
     <div className="w-full">
       <div className="max-w-[1200px] mx-auto px-4">
         <div className="flex items-center gap-2">
-          <Link href="/cart">
+          <Link href="/">
             <span className="text-gray-600 hover:text-gray-900">
               <svg
                 className="w-6 h-6"
