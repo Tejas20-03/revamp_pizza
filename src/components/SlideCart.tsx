@@ -26,13 +26,33 @@ import Image from "next/image";
 import VoucherDialog from "./Popup/VoucherDialog";
 import { IoIosArrowForward } from "react-icons/io";
 
-const EmptyCart = () => (
-  <div className="flex flex-col justify-center items-center min-h-[60vh] space-y-4 relative">
-    <div className="absolute w-80 h-80 bg-white rounded-full dark:block hidden"></div>
-    <h5 className="text-2xl font-normal text-gray-700 z-10">Your cart is</h5>
-    <h5 className="text-2xl font-semibold text-gray-900 z-10">Empty</h5>
+const EmptyCart = ({ onClose }: { onClose: () => void }) => (
+  <div className="flex flex-col h-full">
+    <div className="flex justify-between items-center p-4 border-b">
+      <Image
+        src="/assets/broadwayPizzaLogo.png"
+        alt="Broadway Pizza"
+        width={150}
+        height={40}
+        className="h-auto w-28 sm:w-32"
+        priority
+        quality={100}
+      />
+      <button
+        onClick={onClose}
+        className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+      >
+        <IoClose size={24} />
+      </button>
+    </div>
+    <div className="flex flex-col justify-center items-center flex-1 space-y-4 relative">
+      <div className="absolute w-80 h-80 bg-white rounded-full dark:block hidden"></div>
+      <h5 className="text-2xl font-normal text-gray-700 z-10">Your cart is</h5>
+      <h5 className="text-2xl font-semibold text-gray-900 z-10">Empty</h5>
+    </div>
   </div>
 );
+
 
 const SlideCart = () => {
   const dispatch = useDispatch<StoreDispatch>();
@@ -301,7 +321,7 @@ const SlideCart = () => {
   aria-modal="true"
       >
         {cartData.cartProducts.length === 0 ? (
-          <EmptyCart />
+         <EmptyCart onClose={onClose} />
         ) : (
           <div className="flex flex-col h-full">
             <div className="flex justify-between items-center p-4 border-b">
