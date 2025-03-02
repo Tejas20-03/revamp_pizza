@@ -68,6 +68,39 @@ const SlideCart = () => {
   );
 
   useEffect(() => {
+    if (isOpen) {
+      // Prevent background scrolling
+      document.body.style.overflow = 'hidden';
+      
+      // Focus trap
+      const focusableElements = document.querySelector('[role="dialog"]')
+        ?.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+      
+      const handleTab = (e: KeyboardEvent) => {
+        if (e.key === 'Tab' && focusableElements?.length) {
+          const firstElement = focusableElements[0] as HTMLElement;
+          const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement;
+          
+          if (e.shiftKey && document.activeElement === firstElement) {
+            e.preventDefault();
+            lastElement.focus();
+          } else if (!e.shiftKey && document.activeElement === lastElement) {
+            e.preventDefault();
+            firstElement.focus();
+          }
+        }
+      };
+  
+      document.addEventListener('keydown', handleTab);
+      return () => {
+        document.body.style.overflow = 'unset';
+        document.removeEventListener('keydown', handleTab);
+      };
+    }
+  }, [isOpen]);
+  
+
+  useEffect(() => {
     dispatch(
       cartActions.calculateCartTotals({
         addressType: addressData.addressType,
@@ -258,11 +291,14 @@ const SlideCart = () => {
           isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
         }`}
         onClick={onClose}
+        aria-hidden="true"
       />
       <div
         className={`fixed right-0 top-0 h-full w-full md:w-[450px] bg-[#F3F3F7] shadow-xl transform transition-transform duration-300 z-50 ${
           isOpen ? "translate-x-0" : "translate-x-full"
         }`}
+          role="dialog"
+  aria-modal="true"
       >
         {cartData.cartProducts.length === 0 ? (
           <EmptyCart />
