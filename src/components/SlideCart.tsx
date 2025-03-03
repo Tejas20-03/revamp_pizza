@@ -53,7 +53,6 @@ const EmptyCart = ({ onClose }: { onClose: () => void }) => (
   </div>
 );
 
-
 const SlideCart = () => {
   const dispatch = useDispatch<StoreDispatch>();
   const isOpen = useSelector((state: StoreState) => state.toaster.isCartOpen);
@@ -90,17 +89,22 @@ const SlideCart = () => {
   useEffect(() => {
     if (isOpen) {
       // Prevent background scrolling
-      document.body.style.overflow = 'hidden';
-      
+      document.body.style.overflow = "hidden";
+
       // Focus trap
-      const focusableElements = document.querySelector('[role="dialog"]')
-        ?.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
-      
+      const focusableElements = document
+        .querySelector('[role="dialog"]')
+        ?.querySelectorAll(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        );
+
       const handleTab = (e: KeyboardEvent) => {
-        if (e.key === 'Tab' && focusableElements?.length) {
+        if (e.key === "Tab" && focusableElements?.length) {
           const firstElement = focusableElements[0] as HTMLElement;
-          const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement;
-          
+          const lastElement = focusableElements[
+            focusableElements.length - 1
+          ] as HTMLElement;
+
           if (e.shiftKey && document.activeElement === firstElement) {
             e.preventDefault();
             lastElement.focus();
@@ -110,15 +114,14 @@ const SlideCart = () => {
           }
         }
       };
-  
-      document.addEventListener('keydown', handleTab);
+
+      document.addEventListener("keydown", handleTab);
       return () => {
-        document.body.style.overflow = 'unset';
-        document.removeEventListener('keydown', handleTab);
+        document.body.style.overflow = "unset";
+        document.removeEventListener("keydown", handleTab);
       };
     }
   }, [isOpen]);
-  
 
   useEffect(() => {
     dispatch(
@@ -317,11 +320,11 @@ const SlideCart = () => {
         className={`fixed right-0 top-0 h-full w-full md:w-[450px] bg-[#F3F3F7] shadow-xl transform transition-transform duration-300 z-50 ${
           isOpen ? "translate-x-0" : "translate-x-full"
         }`}
-          role="dialog"
-  aria-modal="true"
+        role="dialog"
+        aria-modal="true"
       >
         {cartData.cartProducts.length === 0 ? (
-         <EmptyCart onClose={onClose} />
+          <EmptyCart onClose={onClose} />
         ) : (
           <div className="flex flex-col h-full">
             <div className="flex justify-between items-center p-4 border-b">

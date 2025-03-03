@@ -262,9 +262,9 @@ const ProductPopup: React.FC<IProductProps> = ({
             </button>
           </div>
           <div
-            className={`w-full sm:max-w-[900px] h-full sm:min-h-0 sm:h-[85vh] z-60 sm:rounded-3xl  bg-white dark:bg-[#121212]  ${
-              isOpen ? "slide-up" : "slide-down"
-            } overflow-hidden`}
+        className={`w-full sm:max-w-[900px] h-[100dvh] sm:min-h-0 sm:h-[85vh] z-60 sm:rounded-3xl bg-white dark:bg-[#121212] ${
+          isOpen ? "slide-up" : "slide-down"
+        } overflow-y-auto`}
           >
             <div className="absolute top-0 left-0  z-[51] lg:hidden bg-white dark:bg-[#121212]">
               <div className="fixed left-0 flex justify-end p-4">
@@ -279,7 +279,7 @@ const ProductPopup: React.FC<IProductProps> = ({
                 </button>
               </div>
             </div>
-            <div className="h-full flex flex-col md:flex-row relative">
+            <div className="h-full flex flex-col md:flex-row relative pb-[80px] md:pb-0">
               <div className="w-full md:w-7/12 p-2 md:p-4">
                 {expandedOption && !isMobile() ? (
                   <div className="grid grid-cols-3 gap-4 h-full overflow-y-auto p-4">
@@ -340,7 +340,7 @@ const ProductPopup: React.FC<IProductProps> = ({
                     ))}
                   </div>
                 ) : (
-                  <div className="w-full h-full relative rounded-xl shadow-sm p-4  flex items-center justify-center z-0">
+                  <div className="w-full md:min-h-[400px] relative rounded-xl shadow-sm p-4 flex items-center justify-center z-0">
                     {isNewItem && (
                       <span className="absolute top-6 right-6 z-10 bg-[#1F9226] text-white text-[12px] font-light px-2 py-0.5 rounded animate-bounce">
                         New!
@@ -363,7 +363,7 @@ const ProductPopup: React.FC<IProductProps> = ({
                 )}
               </div>
 
-              <div className="w-full md:w-5/12 p-2 md:p-4 overflow-y-auto bg-[#fcfcfc] dark:bg-[#202020] z-10">
+              <div className="w-full md:w-5/12 p-2 md:p-4 overflow-y-auto bg-[#fcfcfc] dark:bg-[#202020] z-10 max-h-[70vh] md:max-h-none md:h-auto">
                 <div className="mt-2">
                   <div className=" p-4 rounded-lg mb-4">
                     <div className="flex items-center justify-between gap-2">
