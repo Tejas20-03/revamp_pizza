@@ -29,36 +29,40 @@ const OrderForm: React.FC<OrderFormProps> = ({
     <div className="">
       <div className="space-y-4 rounded-lg shadow-[5px_0px_20px_rgba(0,0,0,0.1)] border px-2 py-6">
         <h2 className="text-xl font-bold mb-4">Contact Information</h2>
-
-        <div>
-          <label className="block text-sm opacity-70 font-medium text-gray-700">
-            Full Name
-          </label>
-          <input
-            type="text"
-            required
-            className="mt-1 block w-full rounded-md border border-gray-300 p-3 shadow-sm focus:outline-none text-[14px]"
-            placeholder="Type your full name"
-            value={formData.name}
-            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-          />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {" "}
+          <div>
+            <label className="block text-sm opacity-70 font-medium text-gray-700">
+              Full Name
+            </label>
+            <input
+              type="text"
+              required
+              className="mt-1 block w-full rounded-md border border-gray-300 p-3 shadow-sm focus:outline-none text-[14px]"
+              placeholder="Type your full name"
+              value={formData.name}
+              onChange={(e) =>
+                setFormData({ ...formData, name: e.target.value })
+              }
+            />
+          </div>
+          <div>
+            <label className="block text-sm opacity-70 font-medium text-gray-700">
+              Phone
+            </label>
+            <input
+              type="tel"
+              required
+              className="mt-1 block w-full rounded-md border border-gray-300 p-3 shadow-sm focus:outline-none text-[14px]"
+              placeholder="Type your phone no."
+              value={formData.phone || addressData.phone}
+              onChange={(e) =>
+                setFormData({ ...formData, phone: e.target.value })
+              }
+            />
+          </div>
         </div>
-
-        <div>
-          <label className="block text-sm opacity-70 font-medium text-gray-700">
-            Phone
-          </label>
-          <input
-            type="tel"
-            required
-            className="mt-1 block w-full rounded-md border border-gray-300 p-3 shadow-sm focus:outline-none text-[14px]"
-            placeholder="Type your phone no."
-            value={formData.phone || addressData.phone}
-            onChange={(e) =>
-              setFormData({ ...formData, phone: e.target.value })
-            }
-          />
-        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <label className="block text-sm opacity-70 font-medium text-gray-700">
             Email Address
@@ -73,6 +77,22 @@ const OrderForm: React.FC<OrderFormProps> = ({
             }
           />
         </div>
+        <div>
+          <label className="block text-sm font-medium opacity-70 text-gray-700">
+            Special Instructions
+          </label>
+          <textarea
+            className="mt-1 block w-full rounded-md border border-gray-300 p-3 shadow-sm"
+            placeholder="Type special instructions here"
+            rows={1}
+            value={formData.remarks}
+            onChange={(e) =>
+              setFormData({ ...formData, remarks: e.target.value })
+            }
+          />
+        </div>
+        </div>
+        
 
         <LocationDisplay
           city={addressData.city}
@@ -116,20 +136,7 @@ const OrderForm: React.FC<OrderFormProps> = ({
           </>
         )}
 
-        <div>
-          <label className="block text-sm font-medium opacity-70 text-gray-700">
-            Special Instructions
-          </label>
-          <textarea
-            className="mt-1 block w-full rounded-md border border-gray-300 p-3 shadow-sm"
-            placeholder="Type special instructions here"
-            rows={2}
-            value={formData.remarks}
-            onChange={(e) =>
-              setFormData({ ...formData, remarks: e.target.value })
-            }
-          />
-        </div>
+        
       </div>
 
       <div className="mt-6 flex flex-col gap-1 mb-6">

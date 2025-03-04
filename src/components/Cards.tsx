@@ -49,11 +49,11 @@ const Cards: React.FC<Iprops> = ({ data, heading, isLoading }) => {
   };
 
   return (
-    <div className="w-full pb-[10px] bg-background px-0 md:px-28 relative">
+    <div className="w-full pb-[10px] bg-background px-0 md:px-28 relative xl:max-w-[1500px] mx-auto">
       <div className="xs:pl-[5px] pb-[10px] lg:pr-0 xs:pr-[5px]">
         <h2
           id={heading}
-          className="text-[24px] md:text-[32px] text-[#2A2a2a] dark:text-white font-semibold my-2 md:my-8 mx-4 pt-2"
+          className="text-[24px] md:text-[32px] text-[#2A2a2a] dark:text-white font-semibold my-2 md:my-0 md:mb-4 mx-4"
         >
           {heading}
         </h2>
@@ -63,17 +63,17 @@ const Cards: React.FC<Iprops> = ({ data, heading, isLoading }) => {
             {data?.map((item, index) => (
               <div
                 key={index}
-                className="flex flex-row md:flex-col p-1 rounded-[10px] pt-[5px] justify-between bg-white dark:bg-[#202020] relative"
+                className="flex flex-row md:flex-col p-1 rounded-[10px] pt-[5px] justify-between bg-white dark:bg-[#202020] relative "
                 onClick={() => handleAddToCart(item)}
               >
                 <div className="relative w-1/3 md:w-full rounded-[15px] p-1 transition-[filter,transform] cursor-pointer duration-200 linear">
                   {item.DiscountPercentage > 0 && (
-                    <span className="absolute top-2 left-2 z-10 bg-[#FFC714] dark:text-black text-[var(--text-primary)] text-[10px] font-normal px-1 py-0 rounded-lg animate-bounce">
+                    <span className="absolute top-2 left-2 z-10 bg-[#FFC714] dark:text-black text-[var(--text-primary)] text-[10px] md:text-[14px] font-normal px-1 py-0 rounded-lg animate-bounce">
                       Save {item.DiscountPercentage}%
                     </span>
                   )}
                   {item.IsNewItem && (
-                    <span className="absolute top-2 right-2 z-10 bg-[#1F9226] text-white text-[12px] font-light px-1 py-0 rounded">
+                    <span className="absolute top-2 right-2 z-10 bg-[#1F9226] text-white text-[12px] md:text-[14px] font-light px-1 py-0 rounded">
                       New!
                     </span>
                   )}
@@ -86,7 +86,7 @@ const Cards: React.FC<Iprops> = ({ data, heading, isLoading }) => {
                     quality={100}
                   />
                 </div>
-                <div className="flex flex-col flex-1 px-1 mb-2 justify-start">
+                <div className="flex flex-col flex-1 px-1 mb-2 justify-between">
                   <div className="flex justify-between items-center gap-1">
                     <h3 className="text-[18px] md:text-[20px] font-medium py-1 flex-1 leading-tight dark:text-white">
                       {item.Name}
@@ -103,7 +103,7 @@ const Cards: React.FC<Iprops> = ({ data, heading, isLoading }) => {
 
                   {item.Description && (
                     <div
-                      className="text-[12px] md:text-[14px] text-[#5C6370] text-left md:text-justify mt-1 font-normal"
+                      className="text-[12px] md:text-[14px] text-[#5C6370] text-left md:text-justify mt-1 font-normal line-clamp-2"
                       dangerouslySetInnerHTML={{ __html: item.Description }}
                     />
                   )}
@@ -128,11 +128,6 @@ const Cards: React.FC<Iprops> = ({ data, heading, isLoading }) => {
                             from Rs.{item.DiscountedPrice}
                           </span>
                         )}
-                        {/* {Number(item.MinDeliveryPrice || 0) > 0 && (
-                          <span className="hidden md:block text-[10px] font-normal relative after:absolute after:w-[120%] after:h-[2px] after:bg-red-400 after:block after:left-[-2px] after:top-[50%] after:rotate-[-10deg] after:origin-center">
-                            Rs.{item.MinDeliveryPrice}
-                          </span>
-                        )} */}
                       </div>
                       <button
                         onClick={() => handleAddToCart(item)}

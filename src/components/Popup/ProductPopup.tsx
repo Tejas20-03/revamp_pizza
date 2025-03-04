@@ -246,7 +246,7 @@ const ProductPopup: React.FC<IProductProps> = ({
           <div
             className="hidden md:block absolute z-[52]"
             style={{
-              right: "15rem",
+              right: window.innerWidth >= 1920 ? "28rem" : "15rem",
               top: "4rem",
             }}
           >
@@ -262,9 +262,9 @@ const ProductPopup: React.FC<IProductProps> = ({
             </button>
           </div>
           <div
-        className={`w-full sm:max-w-[900px] h-[100dvh] sm:min-h-0 sm:h-[85vh] z-60 sm:rounded-3xl bg-white dark:bg-[#121212] ${
-          isOpen ? "slide-up" : "slide-down"
-        } overflow-y-auto`}
+            className={`w-full sm:max-w-[900px] h-[100dvh] sm:min-h-0 sm:h-[85vh] z-60 sm:rounded-3xl bg-white dark:bg-[#121212] ${
+              isOpen ? "slide-up" : "slide-down"
+            } overflow-y-auto`}
           >
             <div className="absolute top-0 left-0  z-[51] lg:hidden bg-white dark:bg-[#121212]">
               <div className="fixed left-0 flex justify-end p-4">
@@ -282,36 +282,44 @@ const ProductPopup: React.FC<IProductProps> = ({
             <div className="h-full flex flex-col md:flex-row relative pb-[80px] md:pb-0">
               <div className="w-full md:w-7/12 p-2 md:p-4">
                 {expandedOption && !isMobile() ? (
-                  <div className="grid grid-cols-3 gap-4 h-full overflow-y-auto p-4">
-                    {(
-                      product.MenuSizesList?.find(
-                        (cat) => cat.Size === selectedSize
-                      )?.FlavourAndToppingsList?.find(
-                        (t) => t.Name === expandedOption
-                      )?.OptionsList ||
-                      product.MenuSizesList[0].FlavourAndToppingsList.find(
-                        (t) => t.Name === expandedOption
-                      )?.OptionsList ||
-                      []
-                    ).map((option) => (
-                      <div
-                        key={option.ID}
-                        onClick={() => {
-                          const currentTopping =
-                            product.MenuSizesList?.find(
-                              (cat) => cat.Size === selectedSize
-                            )?.FlavourAndToppingsList?.find(
-                              (t) => t.Name === expandedOption
-                            ) ||
-                            product.MenuSizesList[0].FlavourAndToppingsList.find(
-                              (t) => t.Name === expandedOption
-                            );
-                          if (currentTopping) {
-                            handleOptionSelect(option, currentTopping);
-                          }
-                          setExpandedOption(null);
-                        }}
-                        className={`cursor-pointer p-1 rounded-xl transition-all duration-200 
+                  <>
+                    <button
+                      onClick={() => setExpandedOption(null)}
+                      className="mb-4 flex items-center gap-2 text-gray-600 hover:text-gray-800 transition-colors"
+                    >
+                      <FaChevronDown className="rotate-90" size={16} />
+                      <span>Back to product</span>
+                    </button>
+                    <div className="grid grid-cols-3 gap-4 h-full overflow-y-auto p-4">
+                      {(
+                        product.MenuSizesList?.find(
+                          (cat) => cat.Size === selectedSize
+                        )?.FlavourAndToppingsList?.find(
+                          (t) => t.Name === expandedOption
+                        )?.OptionsList ||
+                        product.MenuSizesList[0].FlavourAndToppingsList.find(
+                          (t) => t.Name === expandedOption
+                        )?.OptionsList ||
+                        []
+                      ).map((option) => (
+                        <div
+                          key={option.ID}
+                          onClick={() => {
+                            const currentTopping =
+                              product.MenuSizesList?.find(
+                                (cat) => cat.Size === selectedSize
+                              )?.FlavourAndToppingsList?.find(
+                                (t) => t.Name === expandedOption
+                              ) ||
+                              product.MenuSizesList[0].FlavourAndToppingsList.find(
+                                (t) => t.Name === expandedOption
+                              );
+                            if (currentTopping) {
+                              handleOptionSelect(option, currentTopping);
+                            }
+                            setExpandedOption(null);
+                          }}
+                          className={`cursor-pointer p-1 rounded-xl transition-all duration-200 
               bg-white dark:bg-[#202020] hover:bg-gray-50 dark:hover:bg-[#303030]
               flex flex-col items-center relative h-fit
               ${
@@ -320,25 +328,26 @@ const ProductPopup: React.FC<IProductProps> = ({
                   : ""
               }
             `}
-                      >
-                        <Image
-                          src={option.ItemImage || "/default-topping.png"}
-                          width={150}
-                          height={150}
-                          alt={option.Name}
-                          className="rounded-xl w-full h-36 object-contain"
-                        />
-                        <h3 className="font-bold text-[14px] text-center dark:text-white">
-                          {option.Name}
-                        </h3>
-                        {option.Price > 0 && (
-                          <p className="text-red-500 mt-2">
-                            +Rs. {option.Price}
-                          </p>
-                        )}
-                      </div>
-                    ))}
-                  </div>
+                        >
+                          <Image
+                            src={option.ItemImage || "/default-topping.png"}
+                            width={150}
+                            height={150}
+                            alt={option.Name}
+                            className="rounded-xl w-full h-36 object-contain"
+                          />
+                          <h3 className="font-bold text-[14px] text-center dark:text-white">
+                            {option.Name}
+                          </h3>
+                          {option.Price > 0 && (
+                            <p className="text-red-500 mt-2">
+                              +Rs. {option.Price}
+                            </p>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </>
                 ) : (
                   <div className="w-full md:min-h-[400px] relative rounded-xl shadow-sm p-4 flex items-center justify-center z-0">
                     {isNewItem && (

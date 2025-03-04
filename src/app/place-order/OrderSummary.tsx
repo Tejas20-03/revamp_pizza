@@ -1,3 +1,9 @@
+import { useCallback } from "react";
+import ItemCard from "../cart/ItemCard";
+import { addQuantity, removeFromCart, removeQuantity } from "@/redux/cart/action";
+import { useDispatch } from "react-redux";
+import { StoreDispatch } from "@/redux/reduxStore";
+
 interface OrderSummaryProps {
   cartData: {
     VoucherDiscount: number;
@@ -30,134 +36,115 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
   onConfirmOrder,
   isLoading,
 }) => {
+  const dispatch = useDispatch<StoreDispatch>();
+
+  const calculateGrossTotal = () => {
+    return Math.round(
+      cartData.cartProducts.reduce((total, item) => {
+        const originalPrice =
+          (item.TotalProductPrice + item.discountGiven) * item.Quantity;
+        return total + originalPrice;
+      }, 0)
+    );
+  };
+  const handleMinusClick = useCallback(
+    (item: any) => {
+      if (!item?.ItemID) return;
+      if (item.Quantity <= 1) {
+        dispatch(removeFromCart({ id: item.ItemID }));
+      } else {
+        dispatch(removeQuantity({ id: item.ItemID }));
+      }
+    },
+    [dispatch]
+  );
+
+  const handleAddQuantity = useCallback(
+    (id: number) => {
+      const item = cartData.cartProducts.find(
+        (product) => Number(product.ItemID) === Number(id)
+      );
+      if (item) {
+        dispatch(
+          addQuantity({
+            id: Number(id),
+            options: item.options,
+          })
+        );
+      }
+    },
+    [dispatch, cartData.cartProducts]
+  );
   return (
-    <div className="md:col-span-5 sticky top-0 md:fixed md:right-40 md:top-28 md:w-[460px] mt-2 p-2 md:mt-0 space-y-2 pb-24 md:pb-0">
-      <div className="space-y-2">
-        {cartData.cartProducts.map((item, index) => (
-          <div
-            key={index}
-            className="p-2 bg-white shadow-[5px_0px_20px_rgba(0,0,0,0.1)] rounded-lg"
-          >
-            <div className="flex gap-2">
-              <span className="font-extrabold text-[14px] text-[var(--text-primary)]">
-                {item.ProductName}
-              </span>
-              <span className="font-medium text-[12px] text-white bg-[#8e8e93] px-1  rounded align-middle">
-                x {item.Quantity}
-              </span>
-            </div>
-            {item.options &&
-              Array.isArray(item.options) &&
-              item.options.map((option: OrderOption, idx: number) => (
-                <div
-                  key={idx}
-                  className="flex justify-between mt-1 font-normal opacity-70 text-[12px] text-[var(--text-primary)]"
-                >
-                  <span>
-                    {option.OptionGroupName}: {option.OptionName} x
-                    {option.Quantity}
-                  </span>
-                  {option.Price > 0 && (
-                    <span>+Rs {option.Price * Number(option.Quantity)}</span>
-                  )}
+<div className="sticky top-4 max-h-screen w-full md:w-[450px] bg-[#F3F3F7] shadow-xl transform transition-transform duration-300 rounded-lg">
+
+      <div className="flex flex-col h-full">
+        <div className="flex justify-between items-center p-4 border-b">
+          <h2 className="text-[24px] font-semibold">
+            {cartData.cartProducts.length} item for Rs. {cartData.finalTotal}
+          </h2>
+        </div>
+        <div className="flex-1 overflow-y-auto space-y-2">
+          {cartData.cartProducts.map((item, index) => (
+            <ItemCard key={index} item={item} onMinusClick={handleMinusClick}
+            onAddQuantity={handleAddQuantity} />
+          ))}
+        </div>
+        {cartData.cartProducts.length > 0 && (
+          <div className="border-t p-4 space-y-4">
+            <div className="space-y-2">
+              {cartData.VoucherDiscount > 0 && (
+                <div className="flex justify-between py-2 border-t border-dotted border-gray-300">
+                  <p className="font-semibold">Voucher</p>
+                  <p>Rs. -{Number(cartData.VoucherDiscount.toFixed(2))}</p>
                 </div>
-              ))}
-            <div className="flex justify-between mt-2">
-              <span className="font-normal text-[14px] text-[var(--text-primary)]">
-                Total
-              </span>
-              <span className="font-normal text-[11px] text-[var(--text-primary)]">
-                +Rs {item.TotalProductPrice}
-              </span>
+              )}
+
+              {calculateGrossTotal() > cartData.cartSubTotal && (
+                <div className="flex justify-between py-2 border-gray-300">
+                  <p className="font-normal opacity-70 text-[16px] text-[var(--text-primary)]">
+                    Gross Total:
+                  </p>
+                  <p className="font-normal text-[16px] text-[var(--text-primary)]">
+                    Rs. {calculateGrossTotal()}
+                  </p>
+                </div>
+              )}
+
+              {Number(cartData.discount) > 0 && (
+                <div className="flex justify-between py-2 border-t border-gray-300">
+                  <p className="font-normal opacity-70 text-[16px] text-[var(--text-primary)]">
+                    Discount:
+                  </p>
+                  <p className="font-normal text-[16px] text-[var(--text-primary)]">
+                    Rs. {cartData.discount}
+                  </p>
+                </div>
+              )}
+
+              <div className="flex justify-between py-2 border-t border-gray-300">
+                <p className="font-normal opacity-70 text-[16px] text-[var(--text-primary)]">
+                  Total:
+                </p>
+                <p className="text-[var(--text-primary)] font-semibold">
+                  Rs. {cartData.finalTotal}
+                </p>
+              </div>
             </div>
+            <button
+              onClick={onConfirmOrder}
+              disabled={isLoading || cartData.cartProducts.length <= 0}
+              className="w-full bg-[#FFC714] text-white py-3 rounded-full font-semibold hover:bg-[#e6b313] transition-colors flex items-center justify-center gap-2"
+            >
+              {isLoading ? (
+                <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin" />
+              ) : (
+                "Place Your Order"
+              )}
+            </button>
           </div>
-        ))}
+        )}
       </div>
-      <div className="border p-3 shadow-[1px_2px_5px_#0000002b] ">
-        {cartData.VoucherDiscount > 0 && (
-          <div className="flex justify-between py-2 border-t border-dotted border-gray-300">
-            <p className="font-semibold">Voucher</p>
-            <p>Rs. -{Number(cartData.VoucherDiscount.toFixed(2))}</p>
-          </div>
-        )}
-
-        <div className="flex justify-between py-2 border-dotted border-gray-300">
-          <p className="font-normal opacity-70 text-[16px] text-[var(--text-primary)]">
-            Gross Total:
-          </p>
-          <p className="font-normal text-[16px] text-[var(--text-primary)]">
-            Rs.{" "}
-            {Math.round(
-              cartData.cartProducts.reduce((total, item) => {
-                const originalPrice =
-                  (item.TotalProductPrice + item.discountGiven) * item.Quantity;
-                return total + originalPrice;
-              }, 0)
-            )}
-          </p>
-        </div>
-
-        <div className="flex justify-between py-2 border-t border-dotted border-gray-300">
-          <p className="font-normal opacity-70 text-[16px] text-[var(--text-primary)]">
-            Subtotal:
-          </p>
-          <p className="font-normal text-[16px] text-[var(--text-primary)]">
-            Rs.{cartData.cartSubTotal}
-          </p>
-        </div>
-
-        <div className="flex justify-between  py-2 border-t border-dotted border-gray-300">
-          <p className="font-normal opacity-70 text-[16px] text-[var(--text-primary)]">
-            GST ({addressData.delivery_tax}%):
-          </p>
-          <p className="font-normal text-[16px] text-[var(--text-primary)]">
-            Rs. {cartData.tax}
-          </p>
-        </div>
-
-        <div className="flex justify-between py-2 border-t border-dotted border-gray-300">
-          <p className="font-normal opacity-70 text-[16px] text-[var(--text-primary)]">
-            Delivery:
-          </p>
-          <p className="font-normal text-[16px] text-[var(--text-primary)]">
-            Rs. {cartData.deliveryFee}
-          </p>
-        </div>
-
-        {Number(cartData.discount) > 0 && (
-          <div className="flex justify-between  py-2 border-t border-dotted border-gray-300">
-            <p className="font-normal opacity-70 text-[16px] text-[var(--text-primary)]">
-              Discount:
-            </p>
-            <p className="font-normal text-[16px] text-[var(--text-primary)]">
-              Rs. {cartData.discount}
-            </p>
-          </div>
-        )}
-
-        <div className="flex justify-between py-2 border-t border-dotted border-gray-300">
-          <p className="font-normal opacity-70 text-[16px] text-[var(--text-primary)]">
-            Total:
-          </p>
-          <p className="text-[var(--text-primary)] font-semibold">
-            Rs. {cartData.finalTotal}
-          </p>
-        </div>
-      </div>
-
-      <button
-        onClick={onConfirmOrder}
-        disabled={isLoading || cartData.cartProducts.length <= 0}
-        className="w-full py-3 my-4 bg-[#292929] text-white text-[14px] font-extrabold shadow-lg rounded-md disabled:opacity-50 flex items-center justify-center gap-2 uppercase"
-      >
-        {isLoading ? (
-          <div className="flex justify-center items-center">
-            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
-          </div>
-        ) : (
-          "Place Your Order"
-        )}
-      </button>
     </div>
   );
 };

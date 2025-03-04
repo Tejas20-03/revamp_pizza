@@ -198,6 +198,7 @@ const SlideCart = () => {
 
       const data = await response.json();
       if (data.ResponseType === 1) {
+        dispatch(toggleCart(false));
         router.push("/place-order");
       }
     } catch (error) {
@@ -340,7 +341,7 @@ const SlideCart = () => {
               </button>
             </div>
 
-            <div className="flex-1 overflow-y-auto space-y-4">
+            <div className="flex-1 overflow-y-auto space-y-2">
               {cartData.cartProducts.map((item, index) => (
                 <ItemCard
                   key={index}

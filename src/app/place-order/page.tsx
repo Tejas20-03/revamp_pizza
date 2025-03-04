@@ -215,7 +215,7 @@ function PlaceOrder() {
               errors={errors}
             />
           </div>
-          <div className="md:col-span-5 h-fit">
+          <div className="md:col-span-5 h-fit mb-20 md:mb-0">
             <OrderSummary
               cartData={cartData}
               addressData={addressData}
