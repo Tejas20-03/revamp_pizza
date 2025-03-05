@@ -11,7 +11,8 @@ interface Story {
   visited: boolean;
   stories: {
     id: string;
-    image: string;
+    mediaUrl: string;
+    mediaType: "image" | "video";
     duration: number;
   }[];
 }
@@ -23,8 +24,18 @@ const stories: Story[] = [
     title: "New Deals",
     visited: false,
     stories: [
-      { id: "s1", image: "/stories/story1.webp", duration: 3000 },
-      { id: "s2", image: "/stories/story2.jpg", duration: 3000 },
+      {
+        id: "s1",
+        mediaUrl: "/stories/story1.webp",
+        mediaType: "image",
+        duration: 3000,
+      },
+      {
+        id: "s2",
+        mediaUrl: "/stories/video1.mp4",
+        mediaType: "video",
+        duration: 0,
+      },
     ],
   },
   {
@@ -33,8 +44,18 @@ const stories: Story[] = [
     title: "Special Offers",
     visited: false,
     stories: [
-      { id: "s3", image: "/stories/story1.webp", duration: 3000 },
-      { id: "s4", image: "/stories/story2.jpg", duration: 3000 },
+      {
+        id: "s3",
+        mediaUrl: "/stories/story2.webp",
+        mediaType: "image",
+        duration: 3000,
+      },
+      {
+        id: "s4",
+        mediaUrl: "/stories/video2.mp4",
+        mediaType: "video",
+        duration: 0,
+      },
     ],
   },
   {
@@ -42,42 +63,90 @@ const stories: Story[] = [
     coverImage: "/stories/story3.webp",
     title: "Combos",
     visited: false,
-    stories: [{ id: "s5", image: "/stories/story1.webp", duration: 3000 }],
+    stories: [
+      {
+        id: "s5",
+        mediaUrl: "/stories/story3.webp",
+        mediaType: "image",
+        duration: 3000,
+      },
+      {
+        id: "s6",
+        mediaUrl: "/stories/video3.mp4",
+        mediaType: "video",
+        duration: 0,
+      },
+    ],
   },
   {
     id: 4,
     coverImage: "/stories/story4.webp",
     title: "Family Deals",
     visited: false,
-    stories: [{ id: "s6", image: "/stories/story1.webp", duration: 3000 }],
+    stories: [
+      {
+        id: "s7",
+        mediaUrl: "/stories/story4.webp",
+        mediaType: "image",
+        duration: 3000,
+      },
+    ],
   },
   {
     id: 5,
     coverImage: "/stories/story5.webp",
     title: "Party Pack",
     visited: false,
-    stories: [{ id: "s7", image: "/stories/story2.jpg", duration: 3000 }],
+    stories: [
+      {
+        id: "s8",
+        mediaUrl: "/stories/story5.webp",
+        mediaType: "image",
+        duration: 3000,
+      },
+    ],
   },
   {
     id: 6,
     coverImage: "/stories/story6.webp",
     title: "Party Pack",
     visited: false,
-    stories: [{ id: "s7", image: "/stories/story2.jpg", duration: 3000 }],
+    stories: [
+      {
+        id: "s9",
+        mediaUrl: "/stories/story6.webp",
+        mediaType: "image",
+        duration: 3000,
+      },
+    ],
   },
   {
     id: 7,
     coverImage: "/stories/story7.webp",
     title: "Party Pack",
     visited: false,
-    stories: [{ id: "s7", image: "/stories/story2.jpg", duration: 3000 }],
+    stories: [
+      {
+        id: "s10",
+        mediaUrl: "/stories/story7.webp",
+        mediaType: "image",
+        duration: 3000,
+      },
+    ],
   },
   {
     id: 8,
     coverImage: "/stories/story8.webp",
     title: "Party Pack",
     visited: false,
-    stories: [{ id: "s7", image: "/stories/story2.jpg", duration: 3000 }],
+    stories: [
+      {
+        id: "s11",
+        mediaUrl: "/stories/story8.webp",
+        mediaType: "image",
+        duration: 3000,
+      },
+    ],
   },
 ];
 

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { IoClose } from "react-icons/io5";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
@@ -17,43 +17,67 @@ const StoriesViewer = ({
   const [currentStoryIndex, setCurrentStoryIndex] = useState(initialStoryIndex);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [progress, setProgress] = useState(0);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   const currentStory = stories[currentStoryIndex];
-  const currentImage = currentStory.stories[currentImageIndex];
+  const currentMedia = currentStory.stories[currentImageIndex];
+
+  const handleMediaEnd = () => {
+    if (currentImageIndex < currentStory.stories.length - 1) {
+      setCurrentImageIndex((prev) => prev + 1);
+      setProgress(0);
+    } else if (currentStoryIndex < stories.length - 1) {
+      setCurrentStoryIndex((prev) => prev + 1);
+      setCurrentImageIndex(0);
+      setProgress(0);
+    } else {
+      onClose();
+    }
+  };
 
   useEffect(() => {
-    const duration = currentImage.duration;
-    const interval = 100;
-    const steps = duration / interval;
-    let currentStep = 0;
+    if (currentMedia.mediaType === 'image') {
+      const duration = currentMedia.duration;
+      const interval = 100;
+      const steps = duration / interval;
+      let currentStep = 0;
 
-    const timer = setInterval(() => {
-      currentStep++;
-      setProgress((currentStep / steps) * 100);
+      const timer = setInterval(() => {
+        currentStep++;
+        setProgress((currentStep / steps) * 100);
 
-      if (currentStep >= steps) {
-        if (currentImageIndex < currentStory.stories.length - 1) {
-          setCurrentImageIndex((prev) => prev + 1);
-          setProgress(0);
-        } else if (currentStoryIndex < stories.length - 1) {
-          setCurrentStoryIndex((prev) => prev + 1);
-          setCurrentImageIndex(0);
-          setProgress(0);
-        } else {
-          onClose();
+        if (currentStep >= steps) {
+          handleMediaEnd();
         }
-      }
-    }, interval);
+      }, interval);
 
-    return () => clearInterval(timer);
-  }, [
-    currentImage,
-    currentImageIndex,
-    currentStoryIndex,
-    currentStory.stories.length,
-    stories.length,
-    onClose,
-  ]);
+      return () => clearInterval(timer);
+    }
+  }, [currentMedia, currentImageIndex, currentStoryIndex]);
+
+  useEffect(() => {
+    if (videoRef.current && currentMedia.mediaType === 'video') {
+      videoRef.current.currentTime = 0;
+      videoRef.current.play();
+
+      const updateProgress = () => {
+        if (videoRef.current) {
+          const progress = (videoRef.current.currentTime / videoRef.current.duration) * 100;
+          setProgress(progress);
+        }
+      };
+
+      videoRef.current.addEventListener('timeupdate', updateProgress);
+      videoRef.current.addEventListener('ended', handleMediaEnd);
+
+      return () => {
+        if (videoRef.current) {
+          videoRef.current.removeEventListener('timeupdate', updateProgress);
+          videoRef.current.removeEventListener('ended', handleMediaEnd);
+        }
+      };
+    }
+  }, [currentMedia]);
 
   const handleTouchStart = (e: React.TouchEvent) => {
     const touch = e.touches[0];
@@ -67,15 +91,31 @@ const StoriesViewer = ({
         setCurrentImageIndex(stories[currentStoryIndex - 1].stories.length - 1);
       }
     } else {
-      if (currentImageIndex < currentStory.stories.length - 1) {
-        setCurrentImageIndex((prev) => prev + 1);
-      } else if (currentStoryIndex < stories.length - 1) {
-        setCurrentStoryIndex((prev) => prev + 1);
-        setCurrentImageIndex(0);
-      } else {
-        onClose();
-      }
+      handleMediaEnd();
     }
+  };
+
+  const renderMedia = () => {
+    if (currentMedia.mediaType === 'video') {
+      return (
+        <video
+          ref={videoRef}
+          src={currentMedia.mediaUrl}
+          className="w-full h-full object-contain"
+          playsInline
+          muted
+          autoPlay
+        />
+      );
+    }
+    return (
+      <Image
+        src={currentMedia.mediaUrl}
+        alt={currentStory.title}
+        fill
+        className="object-contain"
+      />
+    );
   };
 
   return (
@@ -83,7 +123,7 @@ const StoriesViewer = ({
       <div
         className="absolute inset-0 bg-black/70 backdrop-blur-sm"
         style={{
-          backgroundImage: `url(${currentImage.image})`,
+          backgroundImage: `url(${currentMedia.mediaUrl})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
           filter: "blur(20px) brightness(0.3)",
@@ -116,6 +156,7 @@ const StoriesViewer = ({
             <IoIosArrowForward size={40} />
           </button>
         )}
+        
         <button
           onClick={onClose}
           className="absolute top-4 right-4 z-50 text-white"
@@ -146,12 +187,7 @@ const StoriesViewer = ({
             ))}
           </div>
 
-          <Image
-            src={currentImage.image}
-            alt={currentStory.title}
-            fill
-            className="object-contain"
-          />
+          {renderMedia()}
         </div>
       </div>
     </div>
