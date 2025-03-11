@@ -168,6 +168,20 @@ body {
   }
 }
 
+@layer utilities{
+  .options-grid {
+    height: calc(100vh - 200px);
+    overflow-y: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  
+  .options-grid::-webkit-scrollbar {
+    display: none;
+  }
+  
+}
+
 @keyframes bounce {
   0%,
   100% {

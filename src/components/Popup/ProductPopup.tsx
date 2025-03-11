@@ -290,8 +290,8 @@ const ProductPopup: React.FC<IProductProps> = ({
                       <FaChevronDown className="rotate-90" size={16} />
                       <span>Back to product</span>
                     </button>
-                    <div className="grid grid-cols-3 gap-4 h-full overflow-y-auto p-4">
-                      {(
+                    <div className="grid grid-cols-3 gap-4 options-grid p-4">
+                    {(
                         product.MenuSizesList?.find(
                           (cat) => cat.Size === selectedSize
                         )?.FlavourAndToppingsList?.find(
