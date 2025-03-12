@@ -22,6 +22,7 @@ const Header = () => {
 
   const { isAuthenticated } = useSelector((state: StoreState) => state.auth);
   const address = useSelector((state: StoreState) => state.address);
+  const { userData } = useSelector((state: StoreState) => state.auth);
 
   const [scrollPosition, setScrollPosition] = useState(0);
 
@@ -130,54 +131,65 @@ const Header = () => {
               !isPage.blog &&
               !isPage.about &&
               !isPage.thankyou && (
-                <button
-                  className="flex items-center gap-2 hover:opacity-90 transition-opacity"
-                  onClick={handleOpenPopup}
-                >
-                  <div className="flex items-center">
-                    <PiNavigationArrowThin className="text-[var(--text-primary)] text-lg rotate-90" />
-                    <span className="hidden text-[13px] text-[var(--text-primary)] md:block">
-                      {address.addressType || "Select"}
-                    </span>
-                  </div>
-                  <div className="bg-[var(--primary)] text-[var(--text-primary)] dark:text-black px-1 lg:px-3 sm:py-1 rounded flex items-center gap-2">
-                    <span className="text-[13px] font-semibold whitespace-nowrap">
-                      {(address.area || address.outlet || "Delivery / Pickup")
-                        .split(" ")
-                        .map(
-                          (word) =>
-                            word.charAt(0).toUpperCase() +
-                            word.slice(1).toLowerCase()
-                        )
-                        .join(" ").length > (windowWidth >= 1024 ? 20 : 12)
-                        ? (
-                            address.area ||
-                            address.outlet ||
-                            "Delivery / Pickup"
+                <div className="flex items-center gap-4">
+                  <button
+                    className="flex items-center gap-2 hover:opacity-90 transition-opacity"
+                    onClick={handleOpenPopup}
+                  >
+                    <div className="flex items-center">
+                      <PiNavigationArrowThin className="text-[var(--text-primary)] text-lg rotate-90" />
+                      <span className="hidden text-[13px] text-[var(--text-primary)] md:block">
+                        {address.addressType || "Select"}
+                      </span>
+                    </div>
+                    <div className="bg-[var(--primary)] text-[var(--text-primary)] dark:text-black px-1 lg:px-3 sm:py-1 rounded flex items-center gap-2">
+                      <span className="text-[13px] font-semibold whitespace-nowrap">
+                        {(address.area || address.outlet || "Delivery / Pickup")
+                          .split(" ")
+                          .map(
+                            (word) =>
+                              word.charAt(0).toUpperCase() +
+                              word.slice(1).toLowerCase()
                           )
-                            .split(" ")
-                            .map(
-                              (word) =>
-                                word.charAt(0).toUpperCase() +
-                                word.slice(1).toLowerCase()
+                          .join(" ").length > (windowWidth >= 1024 ? 20 : 12)
+                          ? (
+                              address.area ||
+                              address.outlet ||
+                              "Delivery / Pickup"
                             )
-                            .join(" ")
-                            .slice(0, windowWidth >= 1024 ? 20 : 12) + "..."
-                        : (
-                            address.area ||
-                            address.outlet ||
-                            "Delivery / Pickup"
-                          )
-                            .split(" ")
-                            .map(
-                              (word) =>
-                                word.charAt(0).toUpperCase() +
-                                word.slice(1).toLowerCase()
+                              .split(" ")
+                              .map(
+                                (word) =>
+                                  word.charAt(0).toUpperCase() +
+                                  word.slice(1).toLowerCase()
+                              )
+                              .join(" ")
+                              .slice(0, windowWidth >= 1024 ? 20 : 12) + "..."
+                          : (
+                              address.area ||
+                              address.outlet ||
+                              "Delivery / Pickup"
                             )
-                            .join(" ")}
+                              .split(" ")
+                              .map(
+                                (word) =>
+                                  word.charAt(0).toUpperCase() +
+                                  word.slice(1).toLowerCase()
+                              )
+                              .join(" ")}
+                      </span>
+                    </div>
+                  </button>
+
+                  <Link
+                    href="/profile"
+                    className="hidden md:block bg-[var(--primary)] text-[var(--text-primary)] dark:text-black px-4 py-1 rounded hover:opacity-90 transition-opacity"
+                  >
+                    <span className="text-[13px] font-semibold">
+                      {userData?.name || "Login"}
                     </span>
-                  </div>
-                </button>
+                  </Link>
+                </div>
               )}
 
             {isPage.profile && isAuthenticated && (
