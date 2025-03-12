@@ -12,6 +12,7 @@ import { FiUser } from "react-icons/fi";
 import { useDispatch, useSelector } from "react-redux";
 import ProductPopup from "./Popup/ProductPopup";
 import { openToaster, setLoading } from "@/redux/toaster/slice";
+import { useRouter, useSearchParams } from "next/navigation";
 
 type Iprops = {
   data: MenuItem[];
@@ -21,13 +22,32 @@ type Iprops = {
 
 const Cards: React.FC<Iprops> = ({ data, heading, isLoading }) => {
   const dispatch = useDispatch<StoreDispatch>();
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const addressData = useSelector((state: StoreState) => state.address);
   const [open, setOpen] = useState<boolean>(false);
   const [productData, setProductData] = useState<MenuItemData | null>(null);
   const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null);
 
+  useEffect(() => {
+    const productParam = searchParams.get("product");
+    if (productParam && data) {
+      const product = data.find(
+        (item) => item.Name.toLowerCase().replace(/\s+/g, "-") === productParam
+      );
+      if (product) {
+        handleAddToCart(product);
+      }
+    }
+  }, [searchParams, data]);
+
   const handleAddToCart = (product: MenuItem) => {
     setSelectedItem(product);
+    const productSlug = `${product.ID}-${product.Name.toLowerCase().replace(
+      /\s+/g,
+      "-"
+    )}`;
+
     if (
       !addressData.addressType ||
       (addressData.addressType === "Delivery" &&
@@ -38,14 +58,26 @@ const Cards: React.FC<Iprops> = ({ data, heading, isLoading }) => {
       dispatch(addressesActions.setAddresses({ modalOpen: true }));
       return;
     }
-    // dispatch(setLoading(true));
-    if (product) {
+    const urlParams = new URLSearchParams(window.location.search);
+    const productParam = urlParams.get("product");
+
+    if (productParam) {
+      router.push(`/product/${product.ID}`);
+    } else {
+      router.push(`${window.location.pathname}?product=${productSlug}`, {
+        scroll: false,
+      });
       getOptions(product.ID, {}).then((res) => {
         setProductData(res?.Data || null);
         setOpen(true);
-        // dispatch(setLoading(false));
       });
     }
+  };
+  const handleClosePopup = () => {
+    router.push(window.location.pathname, { scroll: false });
+    setOpen(false);
+    setProductData(null);
+    setSelectedItem(null);
   };
 
   return (
@@ -150,11 +182,7 @@ const Cards: React.FC<Iprops> = ({ data, heading, isLoading }) => {
         isNewItem={selectedItem?.IsNewItem}
         serving={selectedItem?.Serving}
         minDeliveryPrice={selectedItem?.MinDeliveryPrice}
-        onClose={() => {
-          setOpen(false);
-          setProductData(null);
-          setSelectedItem(null);
-        }}
+        onClose={handleClosePopup}
       />
     </div>
   );

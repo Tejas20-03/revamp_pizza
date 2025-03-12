@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Head from "next/head";
 import { StoreDispatch, StoreState } from "@/redux/reduxStore";
 import { addressesActions } from "@/redux/address/slice";
-import { getMenu } from "@/services/Home/services";
+import { getMenu, getOptions } from "@/services/Home/services";
 import { MenuCategory } from "@/services/Home/types";
 import Cards from "@/components/Cards";
 import HeroCarousel from "@/components/HeroCarousel";
@@ -15,6 +15,7 @@ import { login } from "@/redux/auth/slice";
 import { initializeCartFromStorage } from "@/redux/cart/action";
 import { debounce } from "lodash";
 import StoriesCard from "@/components/StoriesCard";
+import { useRouter } from "next/navigation";
 
 const MemoizedCards = React.memo(Cards);
 const MemoizedHeroCarousel = React.memo(HeroCarousel);
@@ -67,6 +68,7 @@ const SEOHead = () => (
 );
 
 const Home = () => {
+  const router = useRouter();
   const [pageState, setPageState] = useState({
     tabs: [] as string[],
     isLoading: true,
@@ -77,6 +79,7 @@ const Home = () => {
   const dispatch = useDispatch<StoreDispatch>();
   const addressState = useSelector((state: StoreState) => state.address);
 
+  // Inside the fetchMenuData callback
   const fetchMenuData = useCallback(
     async (city: string, location: string, addressType: string) => {
       setPageState((prev) => ({ ...prev, isLoading: true }));
@@ -96,12 +99,35 @@ const Home = () => {
           tabs: categoryNames,
           isLoading: false,
         }));
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const productParam = urlParams.get("product");
+
+        if (productParam) {
+          const [productId] = productParam.split("-");
+          let foundProduct = null;
+
+          data?.Data?.NestedMenuForMobile[0]?.MenuCategoryList.forEach(
+            (category: any) => {
+              const product = category.MenuItemsList.find(
+                (item: any) => item.ID === productId
+              );
+              if (product) {
+                foundProduct = product;
+              }
+            }
+          );
+
+          if (foundProduct) {
+            router.push(`/product/${productId}`);
+          }
+        }
       } catch (error) {
         console.error("Error fetching menu:", error);
         setPageState((prev) => ({ ...prev, isLoading: false }));
       }
     },
-    []
+    [router]
   );
 
   useEffect(() => {
@@ -181,7 +207,6 @@ const Home = () => {
   return (
     <>
       <SEOHead />
-      {/* <MemoizedHeroCarousel /> */}
       {pageState.tabs.length > 0 && (
         <MemoizedTabs tabs={pageState.tabs} isLoading={pageState.isLoading} />
       )}

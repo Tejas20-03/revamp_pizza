@@ -10,6 +10,7 @@ import { FiUser } from "react-icons/fi";
 import { IoClose, IoInformationCircleOutline } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
 import OptionsPopup from "./OptionsPopup";
+import { useRouter } from "next/navigation";
 
 interface IProductProps {
   isOpen: boolean;
@@ -29,6 +30,7 @@ const ProductPopup: React.FC<IProductProps> = ({
   minDeliveryPrice,
 }) => {
   const dispatch = useDispatch<StoreDispatch>();
+  const router = useRouter();
   const addressType = useSelector(
     (state: StoreState) => state.address.addressType
   );
@@ -67,6 +69,12 @@ const ProductPopup: React.FC<IProductProps> = ({
         });
       }
     }
+  };
+
+  const handleClose = () => {
+    router.push(window.location.pathname, { scroll: false });
+    resetSelections();
+    onClose();
   };
 
   useEffect(() => {
@@ -251,10 +259,7 @@ const ProductPopup: React.FC<IProductProps> = ({
             }}
           >
             <button
-              onClick={() => {
-                resetSelections();
-                onClose();
-              }}
+              onClick={handleClose}
               className="p-2 bg-white dark:bg-[#303030] rounded-full transition-colors hover:bg-gray-100 dark:hover:bg-[#404040] flex items-center justify-center shadow-lg"
               aria-label="Close popup"
             >
