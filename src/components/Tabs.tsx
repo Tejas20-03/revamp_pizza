@@ -48,9 +48,13 @@ const Tabs: React.FC<TabsProps> = ({ tabs, isLoading }) => {
   const handleTabClick = useCallback((item: string) => {
     const section = document.getElementById(item);
     if (section) {
-      const offset = window.innerWidth < 768 ? 100 : 120;
+      const navHeight = 80; 
+      const offset = window.innerWidth < 768 ? 120 : 140;
+      const elementPosition = section.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - offset;
+  
       window.scrollTo({
-        top: section.offsetTop - offset,
+        top: offsetPosition,
         behavior: "smooth",
       });
       setActiveTab(item);
