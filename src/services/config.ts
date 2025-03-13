@@ -1,4 +1,5 @@
 export const BASE_URL_BROADWAY_API = "https://services.broadwaypizza.com.pk";
+export const BASE_URL_DODO_API = "https://beta.broadwaypizza.com.pk";
 
 export type configDataType = {
   token?: string;
