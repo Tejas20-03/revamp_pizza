@@ -14,7 +14,7 @@ const setErrorMessage = (message: string) => ({
 });
 
 const GetMenu_api = (city: string, location: string, addressType: string) =>
-  `${BASE_URL_DODO_API}/BroadwayAPI.aspx?Method=GetMenuDodo&city=${city}&${
+  `${BASE_URL_BROADWAY_API}/BroadwayAPI.aspx?Method=GetMenu&city=${city}&${
     addressType === "Pickup" ? `OutletName=${location}` : `area=${location}`
   }`;
 
@@ -22,7 +22,7 @@ const GetMenuImage_api = () =>
   `${BASE_URL_BROADWAY_API}/BroadwayAPI.aspx?Method=GetMenuImagesWeb`;
 
 const getOptions_api = (Id: string) =>
-  `${BASE_URL_DODO_API}/BroadwayAPI.aspx?Method=GetOptionsDodo&ItemID=${Id}`;
+  `${BASE_URL_BROADWAY_API}/BroadwayAPI.aspx?Method=GetOptions&ItemID=${Id}`;
 const getBanner_api = (city: string) =>
   `${BASE_URL_BROADWAY_API}/BroadwayAPI.aspx?Method=GetBanners&City=${city}`;
 
