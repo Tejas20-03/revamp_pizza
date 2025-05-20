@@ -13,14 +13,16 @@ import { useDispatch, useSelector } from "react-redux";
 import ProductPopup from "./Popup/ProductPopup";
 import { openToaster, setLoading } from "@/redux/toaster/slice";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useConfig } from "@/utils/useConfig";
 
 type Iprops = {
   data: MenuItem[];
   heading: string;
   isLoading: boolean;
+  displayType:string
 };
 
-const Cards: React.FC<Iprops> = ({ data, heading, isLoading }) => {
+const Cards: React.FC<Iprops> = ({ data, heading, isLoading, displayType }) => {
   const dispatch = useDispatch<StoreDispatch>();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -28,6 +30,9 @@ const Cards: React.FC<Iprops> = ({ data, heading, isLoading }) => {
   const [open, setOpen] = useState<boolean>(false);
   const [productData, setProductData] = useState<MenuItemData | null>(null);
   const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null);
+  const { config } = useConfig();
+
+  const isDisplayTile = displayType === "Tile";
 
   useEffect(() => {
     const productParam = searchParams.get("product");
@@ -91,14 +96,24 @@ const Cards: React.FC<Iprops> = ({ data, heading, isLoading }) => {
         </h2>
 
         <div className="mx-2">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2 max-w-[1300px] mx-auto">
+          <div
+            className={`grid ${
+              isDisplayTile ? "grid-cols-1" : "grid-cols-2"
+            } md:grid-cols-2 lg:grid-cols-4 gap-2 max-w-[1300px] mx-auto`}
+          >
             {data?.map((item, index) => (
               <div
                 key={index}
-                className="flex flex-row md:flex-col p-1 rounded-[10px] pt-[5px] justify-between bg-white dark:bg-[#202020] relative "
+                className={`flex ${
+                  isDisplayTile ? "flex-row" : "flex-col"
+                } md:flex-col p-1 rounded-[10px] pt-[5px] justify-between bg-white dark:bg-[#202020] relative `}
                 onClick={() => handleAddToCart(item)}
               >
-                <div className="relative w-1/3 md:w-full rounded-[15px] p-1 transition-[filter,transform] cursor-pointer duration-200 linear">
+                <div
+                  className={`relative ${
+                    isDisplayTile ? "w-1/3" : "w-full"
+                  } md:w-full rounded-[15px] p-1 transition-[filter,transform] cursor-pointer duration-200 linear`}
+                >
                   {item.DiscountPercentage > 0 && (
                     <span className="absolute top-2 left-2 z-10 bg-[#FFC714] dark:text-black text-[var(--text-primary)] text-[10px] md:text-[14px] font-normal px-1 py-0 rounded-lg animate-bounce">
                       Save {item.DiscountPercentage}%
@@ -155,7 +170,7 @@ const Cards: React.FC<Iprops> = ({ data, heading, isLoading }) => {
                         {Number(item.DiscountedPrice) > 0 && (
                           <span
                             className={`text-[14px] md:text-[20px] font-medium 
-                         dark:text-white md:text-black text-[#FFC714] md:bg-transparent bg-[#fff0e6] px-4 py-2 md:p-0 rounded-full md:rounded-none`}
+                         dark:text-white md:text-black text-[#FFC714] md:bg-transparent bg-[#fff0e6] dark:bg-[#ffc714] px-4 py-2 md:p-0 rounded-full md:rounded-none`}
                           >
                             from Rs.{item.DiscountedPrice}
                           </span>

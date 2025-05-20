@@ -252,9 +252,13 @@ const HeaderPopup = () => {
       }`}
     >
       <div
-        className={`bg-white dark:bg-[#121212] w-full sm:max-w-[800px] h-screen sm:h-[680px] z-60 sm:rounded-[24px] shadow-xl overflow-hidden md:overflow-y-auto  pointer-events-auto ${
+        className={`bg-white dark:bg-[#121212] w-[95%] max-w-full sm:max-w-[800px] h-[90vh] sm:h-[680px] z-60 sm:rounded-[24px] rounded-[16px] shadow-xl overflow-hidden md:overflow-y-auto pointer-events-auto ${
           addressState.modalOpen ? "slide-up" : "slide-down"
         }`}
+        style={{
+          maxHeight: "90vh",
+          overflowY: "auto"
+        }}
       >
         <PopupHeader onClose={handleClose} />
 
@@ -333,7 +337,7 @@ const HeaderPopup = () => {
         )}
 
         {/* Location Selection */}
-        <div className=" dark:bg-[#202020] m-4">
+        <div className="dark:bg-[#202020] m-4">
           <button
             onClick={() => setShowCityDialog(true)}
             className="w-full py-2 border-b border-gray-300 flex justify-between items-center"
@@ -406,91 +410,92 @@ const HeaderPopup = () => {
 
           {selectedAddressType === "Pickup" && selectedCity && (
             <button
-              onClick={() => setShowOutletDialog(true)}
-              className="w-full py-4 border-b flex justify-between items-center"
-            >
-              <span className="text-[16px] font-normal dark:text-white">
-                Select Outlet
-              </span>
-              <span className="text-sm text-[#000000] dark:text-white opacity-70 flex items-center gap-2">
-                {selectedOutlet || "Select"}{" "}
-                <span className="text-2xl">&gt;</span>
-              </span>
-            </button>
-          )}
-        </div>
-
-        {/* Save Button */}
-        <div className="p-4">
-          {selectedAddressType === "Delivery" && (
-            <button
-              className={`w-full bg-[var(--primary)] text-[var(--text-primary)] dark:text-[#212121] font-extrabold py-3 rounded transition-colors text-[14px] hover:bg-[var(--primary-hover)]
-   `}
-              onClick={handleSaveLocation}
-              disabled={isSaving}
-            >
-              {isSaving ? (
-                <div className="flex items-center justify-center">
-                  <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-white mr-2" />
-                </div>
-              ) : (
-                "SAVE LOCATION"
-              )}
-            </button>
-          )}
-        </div>
-        {selectedAddressType === "Delivery" && (
-          <div className="p-4 flex justify-center items-center">
-            <Image
-              src={"/assets/HeaderImage.png"}
-              alt="Popup Image"
-              width={300}
-              height={120}
-              className="object-contain w-auto md:w-[300px] h-auto"
-              priority
-            />
-          </div>
+            onClick={() => setShowOutletDialog(true)}
+            className="w-full py-4 border-b flex justify-between items-center"
+          >
+            <span className="text-[16px] font-normal dark:text-white">
+              Select Outlet
+            </span>
+            <span className="text-sm text-[#000000] dark:text-white opacity-70 flex items-center gap-2">
+              {selectedOutlet || "Select"}{" "}
+              <span className="text-2xl">&gt;</span>
+            </span>
+          </button>
         )}
       </div>
 
-      {showCityDialog && (
-        <CityPopup
-          isOpen={showCityDialog}
-          onClose={() => setShowCityDialog(false)}
-          cities={cities}
-          searchQuery={searchQuery}
-          onSearchChange={(query) => setSearchQuery(query)}
-          selectedCity={selectedCity}
-          onCitySelect={handleCitySelect}
-          isLoading={isCityLoading}
-        />
-      )}
-      {showAreaDialog && (
-        <AreaPopup
-          isOpen={showAreaDialog}
-          onClose={() => setShowAreaDialog(false)}
-          areas={areas}
-          searchQuery={searchQuery}
-          onSearchChange={(query) => setSearchQuery(query)}
-          selectedArea={selectedArea}
-          onAreaSelect={handleAreaSelect}
-          isLoading={isAreaLoading}
-        />
-      )}
-      {showOutletDialog && (
-        <OutletPopup
-          isOpen={showOutletDialog}
-          onClose={() => setShowOutletDialog(false)}
-          outlets={outlets}
-          searchQuery={searchQuery}
-          onSearchChange={(query) => setSearchQuery(query)}
-          selectedOutlet={selectedOutlet}
-          onOutletSelect={handleOutletSelect}
-          isLoading={isOutletLoading}
-        />
+      {/* Save Button */}
+      <div className="p-4">
+        {selectedAddressType === "Delivery" && (
+          <button
+            className={`w-full bg-[var(--primary)] text-[var(--text-primary)] dark:text-[#212121] font-extrabold py-3 rounded transition-colors text-[14px] hover:bg-[var(--primary-hover)]
+ `}
+            onClick={handleSaveLocation}
+            disabled={isSaving}
+          >
+            {isSaving ? (
+              <div className="flex items-center justify-center">
+                <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-white mr-2" />
+              </div>
+            ) : (
+              "SAVE LOCATION"
+            )}
+          </button>
+        )}
+      </div>
+      {selectedAddressType === "Delivery" && (
+        <div className="p-4 flex justify-center items-center">
+          <Image
+            src={"/assets/HeaderImage.png"}
+            alt="Popup Image"
+            width={300}
+            height={120}
+            className="object-contain w-auto md:w-[300px] h-auto"
+            priority
+          />
+        </div>
       )}
     </div>
-  );
+
+    {showCityDialog && (
+      <CityPopup
+        isOpen={showCityDialog}
+        onClose={() => setShowCityDialog(false)}
+        cities={cities}
+        searchQuery={searchQuery}
+        onSearchChange={(query) => setSearchQuery(query)}
+        selectedCity={selectedCity}
+        onCitySelect={handleCitySelect}
+        isLoading={isCityLoading}
+      />
+    )}
+    {showAreaDialog && (
+      <AreaPopup
+        isOpen={showAreaDialog}
+        onClose={() => setShowAreaDialog(false)}
+        areas={areas}
+        searchQuery={searchQuery}
+        onSearchChange={(query) => setSearchQuery(query)}
+        selectedArea={selectedArea}
+        onAreaSelect={handleAreaSelect}
+        isLoading={isAreaLoading}
+      />
+    )}
+    {showOutletDialog && (
+      <OutletPopup
+        isOpen={showOutletDialog}
+        onClose={() => setShowOutletDialog(false)}
+        outlets={outlets}
+        searchQuery={searchQuery}
+        onSearchChange={(query) => setSearchQuery(query)}
+        selectedOutlet={selectedOutlet}
+        onOutletSelect={handleOutletSelect}
+        isLoading={isOutletLoading}
+      />
+    )}
+  </div>
+);
 };
 
 export default HeaderPopup;
+

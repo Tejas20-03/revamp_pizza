@@ -36,11 +36,13 @@ const OptionSlide = ({
   topping,
   onSelect,
   isSelected,
+  onClose,
 }: {
   option: OptionType;
   topping: ToppingType;
   onSelect: (option: OptionType, topping: ToppingType) => void;
   isSelected: boolean;
+  onClose: () => void;
 }) => (
   <div className="cursor-pointer rounded-[24px] transition-all duration-200 h-full bg-white dark:bg-[#202020] shadow-xl flex flex-col w-[80vw]">
     <div className="p-3 flex flex-col items-center gap-4 h-full">
@@ -74,9 +76,12 @@ const OptionSlide = ({
       </div>
       <div className="flex items-center justify-between gap-4 w-full mt-auto">
         <button
-          onClick={() => onSelect(option, topping)}
+          onClick={() => {
+            onSelect(option, topping);
+            onClose();
+          }}
           className={`w-full px-2 py-4 rounded-full text-[16px] font-bold transition-colors ${
-            isSelected ? "bg-[#fece33] text-black" : "text-black bg-[#ffc714]"
+            isSelected ? "bg-[#ff8126] text-black" : "text-black bg-[#ffc714]"
           }`}
         >
           {isSelected ? "Selected" : "Choose"}
@@ -167,6 +172,7 @@ function OptionsPopup({
                       topping={topping}
                       onSelect={onSelect}
                       isSelected={isOptionSelected(option)}
+                      onClose={onClose}
                     />
                   </div>
                 </SwiperSlide>

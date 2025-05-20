@@ -16,6 +16,7 @@ import { initializeCartFromStorage } from "@/redux/cart/action";
 import { debounce } from "lodash";
 import StoriesCard from "@/components/StoriesCard";
 import { useRouter } from "next/navigation";
+import { useConfig } from "@/utils/useConfig";
 
 const MemoizedCards = React.memo(Cards);
 const MemoizedHeroCarousel = React.memo(HeroCarousel);
@@ -75,6 +76,7 @@ const Home = () => {
     menu: [] as MenuCategory[],
     isMobile: false,
   });
+  const { config, loading: configLoading } = useConfig();
 
   const dispatch = useDispatch<StoreDispatch>();
   const addressState = useSelector((state: StoreState) => state.address);
@@ -213,7 +215,7 @@ const Home = () => {
       <MemoizedStories />
       {pageState.isMobile && <GetApp showFullContent={false} />}
 
-      {pageState.isLoading ? (
+      {pageState.isLoading || configLoading ? (
         <SkeletonLoader />
       ) : (
         pageState.menu?.map((item, index) => (
@@ -222,6 +224,7 @@ const Home = () => {
             isLoading={false}
             data={item.MenuItemsList}
             heading={item.Name}
+            displayType={config?.displayType || "Card"}
           />
         ))
       )}

@@ -48,11 +48,11 @@ const Tabs: React.FC<TabsProps> = ({ tabs, isLoading }) => {
   const handleTabClick = useCallback((item: string) => {
     const section = document.getElementById(item);
     if (section) {
-      const navHeight = 80; 
+      const navHeight = 80;
       const offset = window.innerWidth < 768 ? 120 : 140;
       const elementPosition = section.getBoundingClientRect().top;
       const offsetPosition = elementPosition + window.pageYOffset - offset;
-  
+
       window.scrollTo({
         top: offsetPosition,
         behavior: "smooth",
@@ -131,8 +131,8 @@ const Tabs: React.FC<TabsProps> = ({ tabs, isLoading }) => {
                 transition-all duration-300 whitespace-nowrap rounded-full md:bg-transparent
                 md:hover:text-[#FFC714]     ${
                   activeTab === item
-                    ? "bg-[#FFF5D6] text-[#E5B30D] md:bg-transparent md:text-[#FFC714]"
-                    : "bg-[#F5F5F5] text-black dark:text-gray-300 md:bg-transparent"
+                    ? "bg-[#FFF5D6] text-[#E5B30D] md:bg-transparent md:text-[#FFC714] dark:bg-[#ffc714] dark:text-white"
+                    : "bg-[#F5F5F5] text-black dark:text-gray-100 dark:bg-[#202020] md:bg-transparent"
                 }`}
               >
                 {item}

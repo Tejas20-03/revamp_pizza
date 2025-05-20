@@ -13,6 +13,7 @@ import ProgressLoader from "@/components/UI/ProgressLoader";
 import localFont from "next/font/local";
 import TopHeader from "@/components/TopHeader";
 import SlideCart from "@/components/SlideCart";
+import { ConfigProvider } from "./ConfigContext";
 
 const manrope = Manrope({
   subsets: ["latin"],
@@ -51,18 +52,20 @@ export default function RootLayout({
               className={`${dodo.variable} antialiased`}
               suppressHydrationWarning
             >
-              <SideNav />
-              <main className="main-content">
-                <TopHeader />
-                <Header />
-                <Toaster />
-                <SuccessToast />
-                <LoadingSpinner />
-                <ProgressLoader />
-                <SlideCart/>
-                {children}
-                <GetApp isFooter={true} />
-              </main>
+              <ConfigProvider>
+                <SideNav />
+                <main className="main-content">
+                  <TopHeader />
+                  <Header />
+                  <Toaster />
+                  <SuccessToast />
+                  <LoadingSpinner />
+                  <ProgressLoader />
+                  <SlideCart />
+                  {children}
+                  <GetApp isFooter={true} />
+                </main>
+              </ConfigProvider>
             </body>
           </ThemeProvider>
         </html>

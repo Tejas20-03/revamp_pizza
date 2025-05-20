@@ -260,7 +260,7 @@ const ProductPopup: React.FC<IProductProps> = ({
           >
             <button
               onClick={handleClose}
-              className="p-2 bg-white dark:bg-[#303030] rounded-full transition-colors hover:bg-gray-100 dark:hover:bg-[#404040] flex items-center justify-center shadow-lg"
+              className="p-2 bg-white dark:bg-[#202020] rounded-full transition-colors hover:bg-gray-100 dark:hover:bg-[#404040] flex items-center justify-center shadow-lg"
               aria-label="Close popup"
             >
               <IoClose size={24} className="dark:text-white" />
@@ -284,8 +284,8 @@ const ProductPopup: React.FC<IProductProps> = ({
                 </button>
               </div>
             </div>
-            <div className="h-full flex flex-col md:flex-row relative pb-[80px] md:pb-0">
-              <div className="w-full md:w-7/12 p-2 md:p-4">
+            <div className="h-full flex flex-col md:flex-row relative pb-[80px] md:pb-0 overflow-y-auto">
+              <div className="w-full md:w-7/12 p-2 md:p-4 md:sticky md:top-0">
                 {expandedOption && !isMobile() ? (
                   <>
                     <button
@@ -296,7 +296,7 @@ const ProductPopup: React.FC<IProductProps> = ({
                       <span>Back to product</span>
                     </button>
                     <div className="grid grid-cols-3 gap-4 options-grid p-4">
-                    {(
+                      {(
                         product.MenuSizesList?.find(
                           (cat) => cat.Size === selectedSize
                         )?.FlavourAndToppingsList?.find(
@@ -325,7 +325,7 @@ const ProductPopup: React.FC<IProductProps> = ({
                             setExpandedOption(null);
                           }}
                           className={`cursor-pointer p-1 rounded-xl transition-all duration-200 
-              bg-white dark:bg-[#202020] hover:bg-gray-50 dark:hover:bg-[#303030]
+              bg-white dark:bg-[#121212] hover:bg-gray-50 dark:hover:bg-[#202020]
               flex flex-col items-center relative h-fit
               ${
                 isOptionSelected(option, expandedOption)
@@ -377,7 +377,7 @@ const ProductPopup: React.FC<IProductProps> = ({
                 )}
               </div>
 
-              <div className="w-full md:w-5/12 p-2 md:p-4 overflow-y-auto bg-[#fcfcfc] dark:bg-[#202020] z-10 max-h-[70vh] md:max-h-none md:h-auto">
+              <div className="w-full md:w-5/12 p-2 md:p-4 bg-[#fcfcfc] dark:bg-[#121212] z-10 max-h-[70vh] md:max-h-none md:h-auto">
                 <div className="mt-2">
                   <div className=" p-4 rounded-lg mb-4">
                     <div className="flex items-center justify-between gap-2">
@@ -404,7 +404,7 @@ const ProductPopup: React.FC<IProductProps> = ({
                     {!product.MenuSizesList?.some(
                       (size) => size.FlavourAndToppingsList?.length > 0
                     ) && (
-                      <div className="w-full bg-gray-100 dark:bg-[#303030] rounded-full py-1 text-center mt-4">
+                      <div className="w-full bg-gray-100 dark:bg-[#121212] rounded-full py-1 text-center mt-4">
                         <span className="text-sm font-medium dark:text-white">
                           1 pc
                         </span>
@@ -418,7 +418,7 @@ const ProductPopup: React.FC<IProductProps> = ({
                     ) && (
                       <div className="flex justify-center mb-4 w-full">
                         <div className="relative max-w-full overflow-x-auto no-scrollbar">
-                          <div className="relative flex items-center justify-start bg-gray-100 dark:bg-[#303030] p-1 rounded-full whitespace-nowrap min-w-fit mx-auto">
+                          <div className="relative flex items-center justify-start bg-gray-100 dark:bg-[#202020] p-1 rounded-full whitespace-nowrap min-w-fit mx-auto">
                             {product.MenuSizesList.map(
                               (size, idx) =>
                                 size.Size !== "-" &&
@@ -455,7 +455,7 @@ const ProductPopup: React.FC<IProductProps> = ({
                       size.Size !== "-" && size.Size !== "." && size.Size !== ""
                   )) &&
                   product.MenuSizesList?.map((category, index) => (
-                    <div key={index} className="rounded-[8px]">
+                    <div key={index} className="rounded-[8px] ">
                       {(!selectedSize ||
                         category.Size === selectedSize ||
                         category.Size === "-" ||
@@ -463,7 +463,7 @@ const ProductPopup: React.FC<IProductProps> = ({
                         category.FlavourAndToppingsList?.map((topping, idx) => (
                           <div
                             key={idx}
-                            className="mb-1 px-2 shadow-sm rounded-[10px]"
+                            className="mb-2 px-2 shadow-sm rounded-[10px]"
                           >
                             <h3 className="text-[16px] font-semibold flex items-center gap-2 p-2 dark:text-white">
                               {topping.Name}
@@ -481,7 +481,7 @@ const ProductPopup: React.FC<IProductProps> = ({
                                       handleOptionSelect(option, topping)
                                     }
                                     className={`cursor-pointer p-3 rounded-xl shadow-lg transition-all duration-200 
-                                    bg-white dark:bg-[#202020] dark:hover:bg-[#303030]
+                                    bg-white dark:bg-[#202020] dark:hover:bg-[#202020]
                                     flex flex-col items-center relative
                                     ${
                                       isOptionSelected(option, topping.Name)
@@ -517,7 +517,7 @@ const ProductPopup: React.FC<IProductProps> = ({
                               </div>
                             ) : (
                               <div
-                                className="cursor-pointer p-2 bg-white rounded-lg hover:bg-gray-50 dark:hover:bg-[#303030] flex items-center justify-between shadow-md transition-all duration-200 mb-2"
+                                className="cursor-pointer p-2 bg-white rounded-lg hover:bg-gray-50 dark:bg-[#202020] flex items-center justify-between shadow-md transition-all duration-200 mb-2"
                                 onClick={() => setExpandedOption(topping.Name)}
                               >
                                 <div className="flex items-center gap-2">
@@ -562,7 +562,7 @@ const ProductPopup: React.FC<IProductProps> = ({
                         ))}
                     </div>
                   ))}
-                <div className="fixed bottom-0 left-0 right-0 z-[51] bg-[#fcfcfc] dark:bg-[#202020] p-4 md:sticky md:-bottom-4">
+                <div className="fixed bottom-0 left-0 right-0 z-[51] bg-[#fcfcfc] dark:bg-[#121212] p-4 md:sticky md:-bottom-4">
                   <button
                     onClick={handleAddToCart}
                     disabled={isAddingToCart}
